@@ -1,4 +1,7 @@
 import { isFunction, isNumber, isString, pick } from 'radash';
+import { setTimeout } from 'timers/promises';
+
+import { randomNormal } from './randomNormal';
 
 /** Base type for data items. */
 export type Item = Record<string, unknown>;
@@ -88,7 +91,15 @@ export class MockDb<T extends Item> {
   constructor(private data: T[]) {}
 
   /**
-   * Replicates the functionality of DynamoDB scan/query.
+   * Replicates the functionality of DynamoDB scan/query. Can be run
+   * synchronously, or asynchronously with a normally-disributed delay.
+   *
+   * @param options - {@link QueryOptions | `QueryOptions`} object.
+   * @param delayMean - Mean delay in ms. If omitted or `0`, method will be
+   * synchronous.
+   * @param delayStd - Standard deviation of delay in ms. Default is `20`.
+   *
+   * @returns {@link QueryReturn | `QueryReturn`} object.
    *
    * @remarks
    * Pass {@link QueryOptions.hashKey | `hashKey`} and {@link QueryOptions.hashValue | `hashValue`} to restrict your search to a specific data
@@ -104,21 +115,27 @@ export class MockDb<T extends Item> {
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
    * See the {@link QueryOptions | `QueryOptions`} interface for more details.
-   *
-   * @param options - {@link QueryOptions | `QueryOptions`} object.
-   *
-   * @returns {@link QueryReturn | `QueryReturn`} object.
    */
-  query({
-    hashKey,
-    hashValue,
-    indexComponents,
-    limit = Infinity,
-    pageKeys,
-    sortDesc,
-    sortKey,
-    filter,
-  }: QueryOptions<T> = {}): QueryReturn<T> {
+  query(options: QueryOptions<T>): QueryReturn<T>;
+  async query(
+    options: QueryOptions<T>,
+    delayMean: number,
+    delayStd?: number,
+  ): Promise<QueryReturn<T>>;
+  query(
+    {
+      hashKey,
+      hashValue,
+      indexComponents,
+      limit = Infinity,
+      pageKeys,
+      sortDesc,
+      sortKey,
+      filter,
+    }: QueryOptions<T> = {},
+    delayMean = 0,
+    delayStd = 20,
+  ): QueryReturn<T> | Promise<QueryReturn<T>> {
     // Clone data.
     let items = [...this.data];
 
@@ -162,8 +179,8 @@ export class MockDb<T extends Item> {
       [],
     );
 
-    // Return result.
-    return {
+    // Compose result.
+    const result = {
       count: items.length,
       items,
       pageKeys:
@@ -173,5 +190,11 @@ export class MockDb<T extends Item> {
             ? pick(items[items.length - 1], indexComponents)
             : items[items.length - 1],
     };
+
+    if (delayMean)
+      return setTimeout(Math.max(randomNormal(delayMean, delayStd), 0)).then(
+        () => result,
+      );
+    else return result;
   }
 }

@@ -17,7 +17,7 @@ interface User extends Item {
   lastNameSK?: string;
 }
 
-const mockDb = new MockDb<User>(users as User[]);
+const mockDb = new MockDb(users as User[]);
 
 describe('MockDb', function () {
   describe('query', function () {

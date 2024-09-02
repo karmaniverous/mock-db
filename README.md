@@ -14,6 +14,8 @@ The current feature set includes:
 
 - [`query`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
 
+- All methods can be run synchronously or asynchronously.
+
 That's it!
 
 ## Usage
@@ -64,7 +66,7 @@ console.log(scanResult);
 //   pageKeys: undefined
 // }
 
-// Perform a paged, sorted "query" within a partition.
+// Perform a paged, sorted "query" within a partition with a 100ms mean delay.
 const queryOptions: QueryOptions<User> = {
   hashKey: 'partition',
   hashValue: 'a',
@@ -73,7 +75,7 @@ const queryOptions: QueryOptions<User> = {
   sortKey: 'id',
 };
 
-let queryResult = mockDb.query(queryOptions);
+let queryResult = await mockDb.query(queryOptions, 100);
 
 console.log(queryResult);
 
@@ -87,10 +89,13 @@ console.log(queryResult);
 // }
 
 // Use the returned pageKeys to get the next page.
-queryResult = mockDb.query({
-  ...queryOptions,
-  pageKeys: queryResult.pageKeys,
-});
+queryResult = await mockDb.query(
+  {
+    ...queryOptions,
+    pageKeys: queryResult.pageKeys,
+  },
+  100,
+);
 
 console.log(queryResult);
 

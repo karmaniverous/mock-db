@@ -29,7 +29,7 @@ describe('README', function () {
     expect(scanResult.count).to.equal(2);
   });
 
-  it('query', function () {
+  it('async query', async function () {
     const queryOptions: QueryOptions<User> = {
       hashKey: 'partition',
       hashValue: 'a',
@@ -38,16 +38,19 @@ describe('README', function () {
       sortKey: 'id',
     };
 
-    let queryResult = mockDb.query(queryOptions);
+    let queryResult = await mockDb.query(queryOptions, 100);
 
     console.log(queryResult);
 
     expect(queryResult.count).to.equal(2);
 
-    queryResult = mockDb.query({
-      ...queryOptions,
-      pageKeys: queryResult.pageKeys,
-    });
+    queryResult = await mockDb.query(
+      {
+        ...queryOptions,
+        pageKeys: queryResult.pageKeys,
+      },
+      100,
+    );
 
     console.log(queryResult);
 
