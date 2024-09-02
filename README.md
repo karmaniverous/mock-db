@@ -82,7 +82,7 @@ console.log(queryResult);
 //     { partition: 'a', id: '1', name: 'Dave' },
 //     { partition: 'a', id: '2', name: 'Charlie' }
 //   ],
-//   pageKeys: { partition: 'a', id: '2', name: 'Charlie' }
+//   pageKeys: { partition: 'a', id: '2' }
 // }
 
 // Use the returned pageKeys to get the next page.

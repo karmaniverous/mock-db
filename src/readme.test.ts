@@ -33,6 +33,7 @@ describe('README', function () {
     const queryOptions: QueryOptions<User> = {
       hashKey: 'partition',
       hashValue: 'a',
+      indexComponents: ['partition', 'id'],
       limit: 2,
       sortKey: 'id',
     };
