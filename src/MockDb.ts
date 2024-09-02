@@ -46,13 +46,13 @@ export interface QueryOptions<T extends Record<string, unknown>> {
   sortKey?: string;
 
   /**
-   * If provided, only records that pass the test will be returned.
+   * If provided, only records that pass the filter will be returned.
    *
    * @param item - Record to test.
    *
    * @returns truthy if record should be included in result set.
    */
-  test?: (item: T) => unknown;
+  filter?: (item: T) => unknown;
 }
 
 /**
@@ -75,6 +75,19 @@ export class MockDb<T extends Record<string, unknown>> {
   /**
    * Replicates the functionality of DynamoDB scan/query.
    *
+   * @remarks
+   * Pass {@link QueryOptions.hashKey | `hashKey`} and {@link QueryOptions.hashValue | `hashValue`} to restrict your search to a specific data
+   * partition like a DynamoDB `query` operation. Otherwise, search will be
+   * performed across partitions like a DynamoDB `scan`.
+   *
+   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKeys | `pageKeys`} for the next
+   * data page.
+   *
+   * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
+   * `{@link QueryOptions.sortDesc | `sortDesc`}: true` to sort in descending order.
+   *
+   * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
+   *
    * @param options - {@link QueryOptions | `QueryOptions`} object.
    *
    * @returns {@link QueryReturn | `QueryReturn`} object.
@@ -87,7 +100,7 @@ export class MockDb<T extends Record<string, unknown>> {
     pageKeys,
     sortDesc,
     sortKey,
-    test,
+    filter,
   }: QueryOptions<T> = {}): QueryReturn<T> {
     // Clone data.
     let items = [...this.data];
@@ -121,11 +134,11 @@ export class MockDb<T extends Record<string, unknown>> {
         )
       : -1;
 
-    // Apply test & limit.
+    // Apply filter & limit.
     items = items.reduce<T[]>(
       (items, item, i) =>
         i > pageKeysIndex &&
-        (isFunction(test) ? !!test(item) : true) &&
+        (isFunction(filter) ? !!filter(item) : true) &&
         items.length < limit
           ? [...items, item]
           : items,

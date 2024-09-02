@@ -70,7 +70,7 @@ describe('MockDb', function () {
         hashKey: 'entityPK',
         hashValue: 'user!0',
         sortKey: 'lastNameCanonical',
-        test: ({ lastNameCanonical }) =>
+        filter: ({ lastNameCanonical }) =>
           lastNameCanonical && lastNameCanonical > 'e',
       });
 
@@ -85,7 +85,7 @@ describe('MockDb', function () {
         hashValue: 'user!0',
         sortDesc: true,
         sortKey: 'lastNameCanonical',
-        test: ({ lastNameCanonical }) =>
+        filter: ({ lastNameCanonical }) =>
           lastNameCanonical && lastNameCanonical > 'e',
       });
 

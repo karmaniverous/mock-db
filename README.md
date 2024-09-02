@@ -12,7 +12,7 @@ MockDb is not a database in any meaningful sense, nor does it express anything l
 
 The current feature set includes:
 
-- `query` - Depending on the options passed, this method behaves like either a DynamoDb `query` or `scan` operation, including limited return sets with page keys.
+- [`query`](https://karmanivero.us/mock-db/classes/MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDb `query` or `scan` operation, including limited return sets with page keys.
 
 That's it!
 
@@ -50,7 +50,7 @@ const mockDb = new MockDb<User>(users);
 // Perform a "scan" across partitions with a filter.
 const scanResult = mockDb.query({
   sortKey: 'id',
-  test: ({ id }) => id > '2',
+  filter: ({ id }) => id > '2',
 });
 
 console.log(scanResult);

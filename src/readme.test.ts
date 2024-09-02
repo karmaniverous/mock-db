@@ -21,7 +21,7 @@ describe('README', function () {
   it('scan', function () {
     const scanResult = mockDb.query({
       sortKey: 'id',
-      test: ({ id }) => id > '2',
+      filter: ({ id }) => id > '2',
     });
 
     console.log(scanResult);
