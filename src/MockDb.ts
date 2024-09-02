@@ -77,7 +77,7 @@ export interface QueryReturn<T extends Record<string, unknown>> {
  * This class is intended to replicate essential DynamoDB BEHAVIORS, not the
  * actual API!
  *
- * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.query | `query`}hashKey & {@link QueryOptions.query | `query`}sortKey as arguments and
+ * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortKey | `sortKey`} as arguments and
  * returns limited record sets with {@link QueryReturn.pageKeys | `pageKeys`}. It will accept a {@link QueryOptions.filter | `filter`}
  * function, but makes no attempt to replicate DynamoDB query syntax.
  */
