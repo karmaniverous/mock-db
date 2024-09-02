@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { MockDb, QueryOptions } from '.';
+import { type Item, MockDb, type QueryOptions } from '.';
 
-interface User extends Record<string, unknown> {
+interface User extends Item {
   partition: string;
   id: string;
   name: string;

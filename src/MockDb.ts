@@ -1,9 +1,12 @@
 import { isFunction, isNumber, isString, pick } from 'radash';
 
+/** Base type for data items. */
+export type Item = Record<string, unknown>;
+
 /**
  * Options for `query` method.
  */
-export interface QueryOptions<T extends Record<string, unknown>> {
+export interface QueryOptions<T extends Item> {
   /**
    * If provided, only records that pass the filter will be returned.
    *
@@ -58,7 +61,7 @@ export interface QueryOptions<T extends Record<string, unknown>> {
 /**
  * Return type for {@link MockDb.query | `query`} method.
  */
-export interface QueryReturn<T extends Record<string, unknown>> {
+export interface QueryReturn<T extends Item> {
   /** Number of records returned in this result set, exclusive of other pages. */
   count: number;
 
@@ -81,7 +84,7 @@ export interface QueryReturn<T extends Record<string, unknown>> {
  * returns limited record sets with {@link QueryReturn.pageKeys | `pageKeys`}. It will accept a {@link QueryOptions.filter | `filter`}
  * function, but makes no attempt to replicate DynamoDB query syntax.
  */
-export class MockDb<T extends Record<string, unknown>> {
+export class MockDb<T extends Item> {
   constructor(private data: T[]) {}
 
   /**

@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 
-import { MockDb, QueryOptions } from '../src';
+import { type Item, MockDb, QueryOptions } from '../src';
 import users from './users.json' assert { type: 'json' };
 
-interface User extends Record<string, unknown> {
+interface User extends Item {
   created?: number;
   firstName?: string;
   lastName?: string;

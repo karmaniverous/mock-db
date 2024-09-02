@@ -27,10 +27,10 @@ npm i -D @karmaniverous/mock-db
 Then you can run:
 
 ```ts
-import { MockDb, QueryOptions } from '.';
+import { type Item, MockDb, type QueryOptions } from '.';
 
 // Specify the data type.
-interface User extends Record<string, unknown> {
+interface User extends Item {
   partition: string;
   id: string;
   name: string;
