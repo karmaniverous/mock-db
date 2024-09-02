@@ -1,5 +1,5 @@
 {
-  "entryPoints": ["./src/index.ts"],
+  "entryPoints": ["./src"],
   "highlightLanguages": [
     "bash",
     "console",
@@ -13,9 +13,6 @@
     "tsx",
     "typescript"
   ],
-  "navigationLinks": {
-    "@karmaniverous": "https://github.com/karmaniverous"
-  },
   "out": "./docs/",
   "plugin": ["typedoc-plugin-replace-text"],
   "projectDocuments": ["./CHANGELOG.md"],
@@ -28,5 +25,11 @@
       }
     ]
   },
-  "titleLink": "https://github.com/karmaniverous/npm-package-template-ts"
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "sidebarLinks": {
+    "GitHub Repo": "https://github.com/karmaniverous/mock-db"
+  },
+  "visibilityFilters": {
+  }
 }
