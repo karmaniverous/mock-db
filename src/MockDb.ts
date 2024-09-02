@@ -5,6 +5,15 @@ import { isFunction, isNumber, isString, pick } from 'radash';
  */
 export interface QueryOptions<T extends Record<string, unknown>> {
   /**
+   * If provided, only records that pass the filter will be returned.
+   *
+   * @param item - Record to test.
+   *
+   * @returns truthy if record should be included in result set.
+   */
+  filter?: (item: T) => unknown;
+
+  /**
    * If provided, query will only return records with matching `hashValue`. If
    * not, query behaves like a DynamoDB scan.
    */
@@ -44,15 +53,6 @@ export interface QueryOptions<T extends Record<string, unknown>> {
    * unless `sortDesc` is `true`.
    */
   sortKey?: string;
-
-  /**
-   * If provided, only records that pass the filter will be returned.
-   *
-   * @param item - Record to test.
-   *
-   * @returns truthy if record should be included in result set.
-   */
-  filter?: (item: T) => unknown;
 }
 
 /**
