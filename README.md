@@ -12,9 +12,9 @@ MockDb is not a database in any meaningful sense, nor does it express anything l
 
 The current feature set includes:
 
-- [`query`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
+- [`query`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#query) & [`querySync`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#querySync) - Depending on the options passed, these methods behave like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
 
-- All methods can be run synchronously, or asynchronously with a normally-distributed delay.
+- All methods exist in synchronous & asynchronous versions. Async methods run with a normally-distributed delay.
 
 That's it!
 
