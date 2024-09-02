@@ -14,25 +14,25 @@ export interface QueryOptions<T extends Record<string, unknown>> {
   filter?: (item: T) => unknown;
 
   /**
-   * If provided, query will only return records with matching `hashValue`. If
+   * If provided, query will only return records with matching {@link QueryOptions.hashValue | `hashValue`}. If
    * not, query behaves like a DynamoDB scan.
    */
   hashKey?: string;
 
   /**
-   * If provided with `hashKey`, only matching records will be returned.
+   * If provided with {@link QueryOptions.hashKey | `hashKey`}, only matching records will be returned.
    */
   hashValue?: unknown;
 
   /**
-   * If provided, `pageKeys` will only contain these components. Otherwise it
-   * will contain the entire record.
+   * If provided, returned {@link QueryReturn.pageKeys | `pageKeys`} will only contain these components.
+   * Otherwise it will contain the entire record.
    */
   indexComponents?: string[];
 
   /**
    * If provided, query will only return up to `limit` records along with
-   * `pageKeys` representing last record.
+   * {@link QueryReturn.pageKeys | `pageKeys`} representing last record returned.
    */
   limit?: number;
 
@@ -43,20 +43,20 @@ export interface QueryOptions<T extends Record<string, unknown>> {
   pageKeys?: T | Pick<T, string>;
 
   /**
-   * If true and `sortKey` is provided, result set will be sorted in
+   * If `true` and {@link QueryOptions.sortKey | `sortKey`} is provided, result set will be sorted in
    * descending order by `sortKey`.
    */
   sortDesc?: boolean;
 
   /**
    * If provided, result set will be sorted by `sortKey`, in ascenting order
-   * unless `sortDesc` is `true`.
+   * unless {@link QueryOptions.sortDesc | `sortDesc`} is `true`.
    */
   sortKey?: string;
 }
 
 /**
- * Return type for `query` method.
+ * Return type for {@link MockDb.query | `query`} method.
  */
 export interface QueryReturn<T extends Record<string, unknown>> {
   /** Number of records returned in this result set, exclusive of other pages. */
@@ -65,7 +65,7 @@ export interface QueryReturn<T extends Record<string, unknown>> {
   /** Records returned in this result set. */
   items: T[];
 
-  /** If `limit` was reached, `pageKeys` will be provided for next page. */
+  /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKeys | `pageKeys`} will be provided for next page. */
   pageKeys?: T | Pick<T, string>;
 }
 
@@ -74,7 +74,7 @@ export interface QueryReturn<T extends Record<string, unknown>> {
  * testing purposes.
  *
  * @remarks
- * This class is intended to replicate essential DynamoDB BEHAVIORS, not the
+ * This class is intended to replicate essential DynamoDB _behaviors_, not the
  * actual API!
  *
  * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortKey | `sortKey`} as arguments and
