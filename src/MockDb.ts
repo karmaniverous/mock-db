@@ -103,6 +103,8 @@ export class MockDb<T extends Item> {
    *
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
+   * See the {@link QueryOptions | `QueryOptions`} interface for more details.
+   *
    * @param options - {@link QueryOptions | `QueryOptions`} object.
    *
    * @returns {@link QueryReturn | `QueryReturn`} object.
