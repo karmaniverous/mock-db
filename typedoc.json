@@ -14,7 +14,7 @@
     "typescript"
   ],
   "out": "./docs/",
-  "plugin": ["typedoc-plugin-replace-text"],
+  "plugin": ["typedoc-plugin-mdn-links", "typedoc-plugin-replace-text"],
   "projectDocuments": ["./CHANGELOG.md"],
   "replaceText": {
     "replacements": [
@@ -30,6 +30,5 @@
   "sidebarLinks": {
     "GitHub Repo": "https://github.com/karmaniverous/mock-db"
   },
-  "visibilityFilters": {
-  }
+  "visibilityFilters": {}
 }
