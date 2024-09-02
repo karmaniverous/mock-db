@@ -45,7 +45,7 @@ const users: User[] = [
 ];
 
 // Create a new instance of MockDb.
-const mockDb = new MockDb<User>(users);
+const mockDb = new MockDb(users);
 
 // Perform a "scan" across partitions with a filter.
 const scanResult = mockDb.query({

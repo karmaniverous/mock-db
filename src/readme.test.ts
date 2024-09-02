@@ -15,7 +15,7 @@ const users: User[] = [
   { partition: 'a', id: '1', name: 'Dave' },
 ];
 
-const mockDb = new MockDb<User>(users);
+const mockDb = new MockDb(users);
 
 describe('README', function () {
   it('scan', function () {
