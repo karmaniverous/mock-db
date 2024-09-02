@@ -6,13 +6,13 @@
 
 # MockDb
 
-The [`MockDb`](https://karmaniverous.github.io/mock-db/docs/classes/index.MockDb.html) class wires up a local JSON data store to replicate some key behaviors of DynamoDB for testing purposes.
+The [`MockDb`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html) class wires up a local JSON data store to replicate some key behaviors of DynamoDB for testing purposes.
 
 MockDb is not a database in any meaningful sense, nor does it express anything like the full range of DynamoDB's features! It's just a limited text fixture, to which I add features as I need them.
 
 The current feature set includes:
 
-- [`query`](https://karmaniverous.github.io/mock-db/docs/classes/index.MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
+- [`query`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
 
 That's it!
 
