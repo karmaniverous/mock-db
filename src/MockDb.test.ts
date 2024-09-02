@@ -21,8 +21,8 @@ const mockDb = new MockDb(users as User[]);
 
 describe('MockDb', function () {
   describe('query', function () {
-    it('hashKey', function () {
-      const queryResult = mockDb.query({
+    it('hashKey', async function () {
+      const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
       });
@@ -34,7 +34,20 @@ describe('MockDb', function () {
       expect(queryResult.pageKeys).to.equal(undefined);
     });
 
-    it('pageKeys', function () {
+    it('constructor sync hashKey', function () {
+      const queryResult = mockDb.querySync({
+        hashKey: 'entityPK',
+        hashValue: 'user!0',
+      });
+
+      console.log(queryResult);
+
+      expect(queryResult.count).to.equal(3);
+      expect(queryResult.items.length).to.equal(3);
+      expect(queryResult.pageKeys).to.equal(undefined);
+    });
+
+    it('pageKeys', async function () {
       const queryOptions: QueryOptions<User> = {
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -42,7 +55,7 @@ describe('MockDb', function () {
         limit: 2,
       };
 
-      let queryResult = mockDb.query(queryOptions);
+      let queryResult = await mockDb.query(queryOptions);
 
       console.log(queryResult);
 
@@ -53,7 +66,7 @@ describe('MockDb', function () {
         entitySK: 'userId#01J6PDX6CE0YGJ7XTXT8MABJNQ',
       });
 
-      queryResult = mockDb.query({
+      queryResult = await mockDb.query({
         ...queryOptions,
         pageKeys: queryResult.pageKeys,
       });
@@ -65,8 +78,8 @@ describe('MockDb', function () {
       expect(queryResult.pageKeys).to.equal(undefined);
     });
 
-    it('sortKey', function () {
-      const queryResult = mockDb.query({
+    it('sortKey', async function () {
+      const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
         sortKey: 'lastNameCanonical',
@@ -79,8 +92,8 @@ describe('MockDb', function () {
       expect(queryResult.items[0].lastNameCanonical).to.equal('hutson');
     });
 
-    it('sortKey desc', function () {
-      const queryResult = mockDb.query({
+    it('sortKey desc', async function () {
+      const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
         sortDesc: true,

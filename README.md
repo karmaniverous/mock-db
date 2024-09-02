@@ -14,7 +14,7 @@ The current feature set includes:
 
 - [`query`](https://karmaniverous.github.io/mock-db/classes/index.MockDb.html#query) - Depending on the options passed, this method behaves like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
 
-- All methods can be run synchronously or asynchronously.
+- All methods can be run synchronously, or asynchronously with a normally-distributed delay.
 
 That's it!
 
@@ -34,25 +34,25 @@ import { type Item, MockDb, type QueryOptions } from '.';
 // Specify the data type.
 interface User extends Item {
   partition: string;
-  id: string;
+  id: number;
   name: string;
 }
 
 // Create some data.
 const users: User[] = [
-  { partition: 'a', id: '4', name: 'Alice' },
-  { partition: 'b', id: '3', name: 'Bob' },
-  { partition: 'a', id: '2', name: 'Charlie' },
-  { partition: 'a', id: '1', name: 'Dave' },
+  { partition: 'a', id: 4, name: 'Alice' },
+  { partition: 'b', id: 3, name: 'Bob' },
+  { partition: 'a', id: 2, name: 'Charlie' },
+  { partition: 'a', id: 1, name: 'Dave' },
 ];
 
 // Create a new instance of MockDb.
 const mockDb = new MockDb(users);
 
-// Perform a "scan" across partitions with a filter.
-const scanResult = mockDb.query({
+// Perform a "scan" synchronously across partitions with a filter.
+const scanResult = mockDb.querySync({
   sortKey: 'id',
-  filter: ({ id }) => id > '2',
+  filter: ({ id }) => id > 2,
 });
 
 console.log(scanResult);
@@ -60,13 +60,13 @@ console.log(scanResult);
 // {
 //   count: 2,
 //   items: [
-//     { partition: 'b', id: '2', name: 'Bob' },
-//     { partition: 'a', id: '3', name: 'Alice' }
+//     { partition: 'b', id: 2, name: 'Bob' },
+//     { partition: 'a', id: 3, name: 'Alice' }
 //   ],
 //   pageKeys: undefined
 // }
 
-// Perform a paged, sorted "query" within a partition with a 100ms mean delay.
+// Perform an asynchronous, paged, sorted "query" within a partition.
 const queryOptions: QueryOptions<User> = {
   hashKey: 'partition',
   hashValue: 'a',
@@ -82,10 +82,10 @@ console.log(queryResult);
 // {
 //   count: 2,
 //   items: [
-//     { partition: 'a', id: '1', name: 'Dave' },
-//     { partition: 'a', id: '2', name: 'Charlie' }
+//     { partition: 'a', id: 1, name: 'Dave' },
+//     { partition: 'a', id: 2, name: 'Charlie' }
 //   ],
-//   pageKeys: { partition: 'a', id: '2' }
+//   pageKeys: { partition: 'a', id: 2 }
 // }
 
 // Use the returned pageKeys to get the next page.
@@ -101,7 +101,7 @@ console.log(queryResult);
 
 // {
 //   count: 1,
-//   items: [ { partition: 'a', id: '4', name: 'Alice' } ],
+//   items: [ { partition: 'a', id: 4, name: 'Alice' } ],
 //   pageKeys: undefined
 // }
 ```

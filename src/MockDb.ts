@@ -86,18 +86,28 @@ export interface QueryReturn<T extends Item> {
  * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortKey | `sortKey`} as arguments and
  * returns limited record sets with {@link QueryReturn.pageKeys | `pageKeys`}. It will accept a {@link QueryOptions.filter | `filter`}
  * function, but makes no attempt to replicate DynamoDB query syntax.
+ *
+ * All methods can be run synchronously, or asynchronously with a normally-
+ * distributed delay.
  */
 export class MockDb<T extends Item> {
-  constructor(private data: T[]) {}
+  /**
+   * Creates a new `MockDb` instance.
+   *
+   * @param data - Array of data items to query.
+   * @param delayMean - Mean delay in ms. If omitted or `undefined`, methods will be synchronous.
+   * @param delayStd - Standard deviation of delay in ms. Default is `20`.
+   */
+  constructor(
+    private data: T[],
+    private delayMean = 100,
+    private delayStd = 20,
+  ) {}
 
   /**
-   * Replicates the functionality of DynamoDB scan/query. Can be run
-   * synchronously, or asynchronously with a normally-disributed delay.
+   * Replicates the functionality of DynamoDB scan/query. Runs synchronously.
    *
    * @param options - {@link QueryOptions | `QueryOptions`} object.
-   * @param delayMean - Mean delay in ms. If omitted or `0`, method will be
-   * synchronous.
-   * @param delayStd - Standard deviation of delay in ms. Default is `20`.
    *
    * @returns {@link QueryReturn | `QueryReturn`} object.
    *
@@ -114,28 +124,19 @@ export class MockDb<T extends Item> {
    *
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
-   * See the {@link QueryOptions | `QueryOptions`} interface for more details.
+   * See the {@link QueryOptions | `QueryOptions`} interface for more info on
+   * query options.
    */
-  query(options: QueryOptions<T>): QueryReturn<T>;
-  async query(
-    options: QueryOptions<T>,
-    delayMean: number,
-    delayStd?: number,
-  ): Promise<QueryReturn<T>>;
-  query(
-    {
-      hashKey,
-      hashValue,
-      indexComponents,
-      limit = Infinity,
-      pageKeys,
-      sortDesc,
-      sortKey,
-      filter,
-    }: QueryOptions<T> = {},
-    delayMean = 0,
-    delayStd = 20,
-  ): QueryReturn<T> | Promise<QueryReturn<T>> {
+  querySync({
+    hashKey,
+    hashValue,
+    indexComponents,
+    limit = Infinity,
+    pageKeys,
+    sortDesc,
+    sortKey,
+    filter,
+  }: QueryOptions<T> = {}): QueryReturn<T> {
     // Clone data.
     let items = [...this.data];
 
@@ -179,8 +180,8 @@ export class MockDb<T extends Item> {
       [],
     );
 
-    // Compose result.
-    const result = {
+    // Compose & return result.
+    return {
       count: items.length,
       items,
       pageKeys:
@@ -190,11 +191,42 @@ export class MockDb<T extends Item> {
             ? pick(items[items.length - 1], indexComponents)
             : items[items.length - 1],
     };
+  }
 
-    if (delayMean)
-      return setTimeout(Math.max(randomNormal(delayMean, delayStd), 0)).then(
-        () => result,
-      );
-    else return result;
+  /**
+   * Replicates the functionality of DynamoDB scan/query. Runs asynchronously
+   * with a normally-disributed delay.
+   *
+   * @param options - {@link QueryOptions | `QueryOptions`} object.
+   * @param delayMean - Mean delay in ms, overrides constructor `delayMean`.
+   * @param delayStd - Standard deviation of delay in ms, overrides constructor
+   * `delayStd`.
+   *
+   * @returns {@link QueryReturn | `QueryReturn`} object.
+   *
+   * @remarks
+   * Pass {@link QueryOptions.hashKey | `hashKey`} and {@link QueryOptions.hashValue | `hashValue`} to restrict your search to a specific data
+   * partition like a DynamoDB `query` operation. Otherwise, search will be
+   * performed across partitions like a DynamoDB `scan`.
+   *
+   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKeys | `pageKeys`} for the next
+   * data page.
+   *
+   * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
+   * {@link QueryOptions.sortDesc | `sortDesc: true`} to sort in descending order.
+   *
+   * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
+   *
+   * See the {@link QueryOptions | `QueryOptions`} interface for more info on
+   * query options.
+   */
+  async query(
+    options: QueryOptions<T> = {},
+    delayMean = this.delayMean,
+    delayStd = this.delayStd,
+  ): Promise<QueryReturn<T>> {
+    await setTimeout(Math.max(randomNormal(delayMean, delayStd), 0));
+
+    return this.querySync(options);
   }
 }
