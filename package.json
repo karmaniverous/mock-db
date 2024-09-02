@@ -6,7 +6,7 @@
   "dependencies": {
     "radash": "^12.1.0"
   },
-  "description": "Mock DynamoDB query & scan behavior with local JSON data.",
+  "description": "Mock DynamoDB-style query & scan behavior with local JSON data.",
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.11.5",
     "@eslint/js": "^9.9.1",
