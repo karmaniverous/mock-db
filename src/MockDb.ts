@@ -99,7 +99,7 @@ export class MockDb<T extends Item> {
    * data page.
    *
    * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
-   * `{@link QueryOptions.sortDesc | `sortDesc`}: true` to sort in descending order.
+   * {@link QueryOptions.sortDesc | `sortDesc: true`} to sort in descending order.
    *
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
