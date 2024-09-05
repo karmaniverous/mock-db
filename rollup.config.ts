@@ -19,6 +19,7 @@ const commonAliases: Alias[] = [];
 
 const commonInputOptions: InputOptions = {
   input: 'src/index.ts',
+  external: ['radash'],
   plugins: [aliasPlugin({ entries: commonAliases }), commonPlugins],
 };
 
