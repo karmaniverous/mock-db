@@ -28,10 +28,11 @@ const config: RollupOptions[] = [
     ...commonInputOptions,
     output: [
       {
-        dir: `${outputPath}/mjs`,
+        // dir: `${outputPath}/mjs`,
         extend: true,
+        file: `${outputPath}/index.mjs`,
         format: 'esm',
-        preserveModules: true,
+        // preserveModules: true,
       },
     ],
   },
@@ -41,10 +42,11 @@ const config: RollupOptions[] = [
     ...commonInputOptions,
     output: [
       {
-        dir: `${outputPath}/cjs`,
+        // dir: `${outputPath}/cjs`,
         extend: true,
+        file: `${outputPath}/index.cjs`,
         format: 'cjs',
-        preserveModules: true,
+        // preserveModules: true,
       },
     ],
   },

@@ -51,11 +51,11 @@
     ".": {
       "import": {
         "types": "./dist/index.d.mts",
-        "default": "./dist/mjs/src/index.js"
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.cts",
-        "default": "./dist/cjs/src/index.js"
+        "default": "./dist/index.cjs"
       }
     }
   },
@@ -71,8 +71,8 @@
     "typescript"
   ],
   "license": "BSD-3-Clause",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/mjs/src/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
   "name": "@karmaniverous/mock-db",
   "publishConfig": {
     "access": "public"
@@ -122,5 +122,5 @@
   },
   "type": "module",
   "types": "dist/index.d.ts",
-  "version": "0.1.1"
+  "version": "0.1.0"
 }
