@@ -31,7 +31,7 @@ describe('MockDb', function () {
 
       expect(queryResult.count).to.equal(3);
       expect(queryResult.items.length).to.equal(3);
-      expect(queryResult.pageKeys).to.equal(undefined);
+      expect(queryResult.pageKey).to.equal(undefined);
     });
 
     it('constructor sync hashKey', function () {
@@ -44,10 +44,10 @@ describe('MockDb', function () {
 
       expect(queryResult.count).to.equal(3);
       expect(queryResult.items.length).to.equal(3);
-      expect(queryResult.pageKeys).to.equal(undefined);
+      expect(queryResult.pageKey).to.equal(undefined);
     });
 
-    it('pageKeys', async function () {
+    it('pageKey', async function () {
       const queryOptions: QueryOptions<User> = {
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -61,21 +61,21 @@ describe('MockDb', function () {
 
       expect(queryResult.count).to.equal(2);
       expect(queryResult.items.length).to.equal(2);
-      expect(queryResult.pageKeys).to.deep.equal({
+      expect(queryResult.pageKey).to.deep.equal({
         entityPK: 'user!0',
         entitySK: 'userId#01J6PDX6CE0YGJ7XTXT8MABJNQ',
       });
 
       queryResult = await mockDb.query({
         ...queryOptions,
-        pageKeys: queryResult.pageKeys,
+        pageKey: queryResult.pageKey,
       });
 
       console.log(queryResult);
 
       expect(queryResult.count).to.equal(1);
       expect(queryResult.items.length).to.equal(1);
-      expect(queryResult.pageKeys).to.equal(undefined);
+      expect(queryResult.pageKey).to.equal(undefined);
     });
 
     it('sortKey', async function () {

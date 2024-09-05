@@ -47,7 +47,7 @@ describe('README', function () {
     queryResult = await mockDb.query(
       {
         ...queryOptions,
-        pageKeys: queryResult.pageKeys,
+        pageKey: queryResult.pageKey,
       },
       100,
     );

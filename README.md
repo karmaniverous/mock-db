@@ -63,7 +63,7 @@ console.log(scanResult);
 //     { partition: 'b', id: 2, name: 'Bob' },
 //     { partition: 'a', id: 3, name: 'Alice' }
 //   ],
-//   pageKeys: undefined
+//   pageKey: undefined
 // }
 
 // Perform an asynchronous, paged, sorted "query" within a partition.
@@ -85,14 +85,14 @@ console.log(queryResult);
 //     { partition: 'a', id: 1, name: 'Dave' },
 //     { partition: 'a', id: 2, name: 'Charlie' }
 //   ],
-//   pageKeys: { partition: 'a', id: 2 }
+//   pageKey: { partition: 'a', id: 2 }
 // }
 
-// Use the returned pageKeys to get the next page.
+// Use the returned pageKey to get the next page.
 queryResult = await mockDb.query(
   {
     ...queryOptions,
-    pageKeys: queryResult.pageKeys,
+    pageKey: queryResult.pageKey,
   },
   100,
 );
@@ -102,7 +102,7 @@ console.log(queryResult);
 // {
 //   count: 1,
 //   items: [ { partition: 'a', id: 4, name: 'Alice' } ],
-//   pageKeys: undefined
+//   pageKey: undefined
 // }
 ```
 

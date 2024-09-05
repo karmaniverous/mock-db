@@ -31,22 +31,22 @@ export interface QueryOptions<T extends Item> {
   hashValue?: unknown;
 
   /**
-   * If provided, returned {@link QueryReturn.pageKeys | `pageKeys`} will only contain these components.
+   * If provided, returned {@link QueryReturn.pageKey | `pageKey`} will only contain these components.
    * Otherwise it will contain the entire record.
    */
   indexComponents?: string[];
 
   /**
    * If provided, query will only return up to `limit` records along with
-   * {@link QueryReturn.pageKeys | `pageKeys`} representing last record returned.
+   * {@link QueryReturn.pageKey | `pageKey`} representing last record returned.
    */
   limit?: number;
 
   /**
    * If provided, result set will begin with the record after the one
-   * represented by `pageKeys`.
+   * represented by `pageKey`.
    */
-  pageKeys?: T | Pick<T, string>;
+  pageKey?: T | Pick<T, string>;
 
   /**
    * If `true` and {@link QueryOptions.sortKey | `sortKey`} is provided, result set will be sorted in
@@ -55,7 +55,7 @@ export interface QueryOptions<T extends Item> {
   sortDesc?: boolean;
 
   /**
-   * If provided, result set will be sorted by `sortKey`, in ascenting order
+   * If provided, result set will be sorted by `sortKey`, in ascending order
    * unless {@link QueryOptions.sortDesc | `sortDesc`} is `true`.
    */
   sortKey?: string;
@@ -71,8 +71,8 @@ export interface QueryReturn<T extends Item> {
   /** Records returned in this result set. */
   items: T[];
 
-  /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKeys | `pageKeys`} will be provided for next page. */
-  pageKeys?: T | Pick<T, string>;
+  /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKey | `pageKey`} will be provided for next page. */
+  pageKey?: T | Pick<T, string>;
 }
 
 /**
@@ -84,7 +84,7 @@ export interface QueryReturn<T extends Item> {
  * actual API!
  *
  * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortKey | `sortKey`} as arguments and
- * returns limited record sets with {@link QueryReturn.pageKeys | `pageKeys`}. It will accept a {@link QueryOptions.filter | `filter`}
+ * returns limited record sets with {@link QueryReturn.pageKey | `pageKey`}. It will accept a {@link QueryOptions.filter | `filter`}
  * function, but makes no attempt to replicate DynamoDB query syntax.
  *
  * All methods can be run synchronously, or asynchronously with a normally-
@@ -116,7 +116,7 @@ export class MockDb<T extends Item> {
    * partition like a DynamoDB `query` operation. Otherwise, search will be
    * performed across partitions like a DynamoDB `scan`.
    *
-   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKeys | `pageKeys`} for the next
+   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKey | `pageKey`} for the next
    * data page.
    *
    * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
@@ -132,7 +132,7 @@ export class MockDb<T extends Item> {
     hashValue,
     indexComponents,
     limit = Infinity,
-    pageKeys,
+    pageKey,
     sortDesc,
     sortKey,
     filter,
@@ -162,17 +162,17 @@ export class MockDb<T extends Item> {
         return 0;
       });
 
-    // Find pageKeys index.
-    const pageKeysIndex = pageKeys
+    // Find pageKey index.
+    const pageKeyIndex = pageKey
       ? items.findIndex((item) =>
-          Object.entries(pageKeys).every(([key, value]) => item[key] === value),
+          Object.entries(pageKey).every(([key, value]) => item[key] === value),
         )
       : -1;
 
     // Apply filter & limit.
     items = items.reduce<T[]>(
       (items, item, i) =>
-        i > pageKeysIndex &&
+        i > pageKeyIndex &&
         (isFunction(filter) ? !!filter(item) : true) &&
         items.length < limit
           ? [...items, item]
@@ -184,7 +184,7 @@ export class MockDb<T extends Item> {
     return {
       count: items.length,
       items,
-      pageKeys:
+      pageKey:
         items.length < limit
           ? undefined
           : indexComponents
@@ -209,7 +209,7 @@ export class MockDb<T extends Item> {
    * partition like a DynamoDB `query` operation. Otherwise, search will be
    * performed across partitions like a DynamoDB `scan`.
    *
-   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKeys | `pageKeys`} for the next
+   * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKey | `pageKey`} for the next
    * data page.
    *
    * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
