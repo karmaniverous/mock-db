@@ -8,7 +8,7 @@
   },
   "description": "Mock DynamoDB-style query & scan behavior with local JSON data.",
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.11.5",
+    "@dotenvx/dotenvx": "^1.14.0",
     "@eslint/js": "^9.9.1",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^26.0.1",
@@ -20,7 +20,7 @@
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/mocha": "^10.0.7",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.5.4",
     "auto-changelog": "^2.4.0",
     "chai": "^5.1.1",
     "eslint": "^9.9.1",
@@ -29,8 +29,8 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-tsdoc": "^0.3.0",
     "jsdom-global": "^3.0.2",
-    "knip": "^5.27.4",
-    "lefthook": "^1.7.14",
+    "knip": "^5.29.2",
+    "lefthook": "^1.7.15",
     "mocha": "^10.7.3",
     "nyc": "^17.0.0",
     "prettier": "^3.3.3",
@@ -45,7 +45,7 @@
     "typedoc-plugin-mdn-links": "^3.2.11",
     "typedoc-plugin-replace-text": "^4.0.0",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.3.0"
+    "typescript-eslint": "^8.4.0"
   },
   "exports": {
     ".": {
