@@ -6,6 +6,8 @@ import typescriptPlugin from '@rollup/plugin-typescript';
 import type { InputOptions, RollupOptions } from 'rollup';
 import dtsPlugin from 'rollup-plugin-dts';
 
+import pkg from './package.json' assert { type: 'json' };
+
 const outputPath = `dist`;
 
 const commonPlugins = [
@@ -17,9 +19,14 @@ const commonPlugins = [
 
 const commonAliases: Alias[] = [];
 
+type Package = Record<string, Record<string, string> | undefined>;
+
 const commonInputOptions: InputOptions = {
   input: 'src/index.ts',
-  external: ['radash'],
+  external: [
+    ...Object.keys((pkg as unknown as Package).dependencies ?? {}),
+    ...Object.keys((pkg as unknown as Package).peerDependencies ?? {}),
+  ],
   plugins: [aliasPlugin({ entries: commonAliases }), commonPlugins],
 };
 
@@ -59,16 +66,6 @@ const config: RollupOptions[] = [
         extend: true,
         file: `${outputPath}/index.d.ts`,
         format: 'esm',
-      },
-      {
-        extend: true,
-        file: `${outputPath}/index.d.mts`,
-        format: 'esm',
-      },
-      {
-        extend: true,
-        file: `${outputPath}/index.d.cts`,
-        format: 'cjs',
       },
     ],
   },
