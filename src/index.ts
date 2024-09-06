@@ -1,6 +1,1 @@
-export {
-  type Item,
-  MockDb,
-  type QueryOptions,
-  type QueryReturn,
-} from './MockDb';
+export { MockDb, type QueryOptions, type QueryReturn } from './MockDb';

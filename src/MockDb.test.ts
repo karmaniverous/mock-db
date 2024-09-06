@@ -1,9 +1,10 @@
+import type { Entity } from '@karmaniverous/entity-tools';
 import { expect } from 'chai';
 
-import { type Item, MockDb, QueryOptions } from '../src';
+import { MockDb, QueryOptions } from '../src';
 import users from './users.json' assert { type: 'json' };
 
-interface User extends Item {
+interface User extends Entity {
   created?: number;
   firstName?: string;
   lastName?: string;

@@ -1,8 +1,9 @@
+import type { Entity } from '@karmaniverous/entity-tools';
 import { expect } from 'chai';
 
-import { type Item, MockDb, type QueryOptions } from '.';
+import { MockDb, type QueryOptions } from '.';
 
-interface User extends Item {
+interface User extends Entity {
   partition: string;
   id: number;
   name: string;

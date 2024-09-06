@@ -4,6 +4,7 @@
     "url": "https://github.com/karmaniverous/mock-db/issues"
   },
   "dependencies": {
+    "@karmaniverous/entity-tools": "^0.0.5",
     "radash": "^12.1.0"
   },
   "description": "Mock DynamoDB-style query & scan behavior with local JSON data.",
@@ -87,11 +88,13 @@
       "release": true
     },
     "hooks": {
-      "after:bump": "npx auto-changelog -p",
       "after:init": [
         "npm run lint",
         "npm run test",
-        "npm run build",
+        "npm run build"
+      ],
+      "before:npm": [
+        "npx auto-changelog -p",
         "npm run docs",
         "git add -A",
         "git commit -m \"updated docs\""

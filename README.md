@@ -18,6 +18,8 @@ The current feature set includes:
 
 That's it!
 
+MockDB depends on [`entity-tools`](https://github.com/karmaniverous/entity-tools) to define entity properties, indexable properties, and records. This package also provides the [`sort`](https://karmanivero.us/entity-tools/functions/index.sort.html) function used internally by [`MockDb.query`](https://karmanivero.us/mock-db/classes/index.MockDb.html#query).
+
 ## Usage
 
 You'll almost certainly run MockDb as a dev dependency. To install:
@@ -29,10 +31,12 @@ npm i -D @karmaniverous/mock-db
 Then you can run:
 
 ```ts
-import { type Item, MockDb, type QueryOptions } from '.';
+import type { Entity } from '@karmaniverous/entity-tools';
+
+import { MockDb, type QueryOptions } from '.';
 
 // Specify the data type.
-interface User extends Item {
+interface User extends Entity {
   partition: string;
   id: number;
   name: string;

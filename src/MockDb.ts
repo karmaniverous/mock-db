@@ -1,15 +1,24 @@
-import { isFunction, isNumber, isString, pick } from 'radash';
+import {
+  type DefaultIndexableProperty,
+  type DefaultProperty,
+  type DescMap,
+  type Entity,
+  type Indexable,
+  sort,
+} from '@karmaniverous/entity-tools';
+import { isFunction, pick } from 'radash';
 import { setTimeout } from 'timers/promises';
 
 import { randomNormal } from './randomNormal';
 
-/** Base type for data items. */
-export type Item = Record<string, unknown>;
-
 /**
  * Options for `query` method.
  */
-export interface QueryOptions<T extends Item> {
+export interface QueryOptions<
+  E extends Entity<P>,
+  P = DefaultProperty,
+  I = DefaultIndexableProperty,
+> {
   /**
    * If provided, only records that pass the filter will be returned.
    *
@@ -17,24 +26,24 @@ export interface QueryOptions<T extends Item> {
    *
    * @returns truthy if record should be included in result set.
    */
-  filter?: (item: T) => unknown;
+  filter?: (item: E) => unknown;
 
   /**
    * If provided, query will only return records with matching {@link QueryOptions.hashValue | `hashValue`}. If
    * not, query behaves like a DynamoDB scan.
    */
-  hashKey?: string;
+  hashKey?: Indexable<E, P, I>;
 
   /**
    * If provided with {@link QueryOptions.hashKey | `hashKey`}, only matching records will be returned.
    */
-  hashValue?: unknown;
+  hashValue?: I;
 
   /**
    * If provided, returned {@link QueryReturn.pageKey | `pageKey`} will only contain these components.
    * Otherwise it will contain the entire record.
    */
-  indexComponents?: string[];
+  indexComponents?: (keyof E)[];
 
   /**
    * If provided, query will only return up to `limit` records along with
@@ -46,7 +55,7 @@ export interface QueryOptions<T extends Item> {
    * If provided, result set will begin with the record after the one
    * represented by `pageKey`.
    */
-  pageKey?: T | Pick<T, string>;
+  pageKey?: E | Pick<E, keyof E>;
 
   /**
    * If `true` and {@link QueryOptions.sortKey | `sortKey`} is provided, result set will be sorted in
@@ -58,21 +67,21 @@ export interface QueryOptions<T extends Item> {
    * If provided, result set will be sorted by `sortKey`, in ascending order
    * unless {@link QueryOptions.sortDesc | `sortDesc`} is `true`.
    */
-  sortKey?: string;
+  sortKey?: Indexable<E, P, I>;
 }
 
 /**
  * Return type for {@link MockDb.query | `query`} method.
  */
-export interface QueryReturn<T extends Item> {
+export interface QueryReturn<E extends Entity<P>, P = DefaultProperty> {
   /** Number of records returned in this result set, exclusive of other pages. */
   count: number;
 
   /** Records returned in this result set. */
-  items: T[];
+  items: E[];
 
   /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKey | `pageKey`} will be provided for next page. */
-  pageKey?: T | Pick<T, string>;
+  pageKey?: E | Pick<E, keyof E>;
 }
 
 /**
@@ -90,7 +99,11 @@ export interface QueryReturn<T extends Item> {
  * All methods can be run synchronously, or asynchronously with a normally-
  * distributed delay.
  */
-export class MockDb<T extends Item> {
+export class MockDb<
+  E extends Entity<P>,
+  P = DefaultProperty,
+  I = DefaultIndexableProperty,
+> {
   /**
    * Creates a new `MockDb` instance.
    *
@@ -99,7 +112,7 @@ export class MockDb<T extends Item> {
    * @param delayStd - Standard deviation of delay in ms. Default is `20`.
    */
   constructor(
-    private data: T[],
+    private data: E[],
     private delayMean = 100,
     private delayStd = 20,
   ) {}
@@ -136,7 +149,7 @@ export class MockDb<T extends Item> {
     sortDesc,
     sortKey,
     filter,
-  }: QueryOptions<T> = {}): QueryReturn<T> {
+  }: QueryOptions<E, P, I> = {}): QueryReturn<E, P> {
     // Clone data.
     let items = [...this.data];
 
@@ -145,22 +158,9 @@ export class MockDb<T extends Item> {
 
     // Sort records by sortKey.
     if (sortKey)
-      items = items.sort((a, b) => {
-        const aValue = a[sortKey];
-        const bValue = b[sortKey];
-
-        if (isNumber(aValue) && isNumber(bValue)) {
-          return sortDesc ? bValue - aValue : aValue - bValue;
-        }
-
-        if (isString(aValue) && isString(bValue)) {
-          return sortDesc
-            ? bValue.localeCompare(aValue)
-            : aValue.localeCompare(bValue);
-        }
-
-        return 0;
-      });
+      items = sort<P, I, E>(items, [sortKey], {
+        [sortKey]: sortDesc,
+      } as DescMap<P, I, E>);
 
     // Find pageKey index.
     const pageKeyIndex = pageKey
@@ -170,7 +170,7 @@ export class MockDb<T extends Item> {
       : -1;
 
     // Apply filter & limit.
-    items = items.reduce<T[]>(
+    items = items.reduce<E[]>(
       (items, item, i) =>
         i > pageKeyIndex &&
         (isFunction(filter) ? !!filter(item) : true) &&
@@ -221,10 +221,10 @@ export class MockDb<T extends Item> {
    * query options.
    */
   async query(
-    options: QueryOptions<T> = {},
+    options: QueryOptions<E, P, I> = {},
     delayMean = this.delayMean,
     delayStd = this.delayStd,
-  ): Promise<QueryReturn<T>> {
+  ): Promise<QueryReturn<E, P>> {
     await setTimeout(Math.max(randomNormal(delayMean, delayStd), 0));
 
     return this.querySync(options);
