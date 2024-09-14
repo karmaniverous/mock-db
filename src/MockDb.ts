@@ -1,10 +1,10 @@
 import {
-  type DefaultIndexableProperty,
-  type DefaultProperty,
-  type DescMap,
   type Entity,
-  type Indexable,
+  PropertiesInTypeMap,
   sort,
+  type SortOrder,
+  type StringifiableTypes,
+  type TypeMap,
 } from '@karmaniverous/entity-tools';
 import { isFunction, pick } from 'radash';
 import { setTimeout } from 'timers/promises';
@@ -13,11 +13,15 @@ import { randomNormal } from './randomNormal';
 
 /**
  * Options for `query` method.
+ *
+ * @typeParam E - {@link Entity | `Entity`} type.
+ * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ *
+ * @category MockDb
  */
 export interface QueryOptions<
-  E extends Entity<P>,
-  P = DefaultProperty,
-  I = DefaultIndexableProperty,
+  E extends Entity,
+  IndexableTypes extends TypeMap = StringifiableTypes,
 > {
   /**
    * If provided, only records that pass the filter will be returned.
@@ -25,6 +29,8 @@ export interface QueryOptions<
    * @param item - Record to test.
    *
    * @returns truthy if record should be included in result set.
+   *
+   * @category MockDb
    */
   filter?: (item: E) => unknown;
 
@@ -32,18 +38,18 @@ export interface QueryOptions<
    * If provided, query will only return records with matching {@link QueryOptions.hashValue | `hashValue`}. If
    * not, query behaves like a DynamoDB scan.
    */
-  hashKey?: Indexable<E, P, I>;
+  hashKey?: PropertiesInTypeMap<E, IndexableTypes>;
 
   /**
    * If provided with {@link QueryOptions.hashKey | `hashKey`}, only matching records will be returned.
    */
-  hashValue?: I;
+  hashValue?: IndexableTypes[keyof IndexableTypes];
 
   /**
    * If provided, returned {@link QueryReturn.pageKey | `pageKey`} will only contain these components.
    * Otherwise it will contain the entire record.
    */
-  indexComponents?: (keyof E)[];
+  indexComponents?: PropertiesInTypeMap<E, IndexableTypes>[];
 
   /**
    * If provided, query will only return up to `limit` records along with
@@ -55,25 +61,26 @@ export interface QueryOptions<
    * If provided, result set will begin with the record after the one
    * represented by `pageKey`.
    */
-  pageKey?: E | Pick<E, keyof E>;
+  pageKey?: E | Pick<E, PropertiesInTypeMap<E, IndexableTypes>>;
 
   /**
-   * If `true` and {@link QueryOptions.sortKey | `sortKey`} is provided, result set will be sorted in
-   * descending order by `sortKey`.
+   * A {@link SortOrder | `SortOrder`} object specifying the sort order of the result set.
    */
-  sortDesc?: boolean;
-
-  /**
-   * If provided, result set will be sorted by `sortKey`, in ascending order
-   * unless {@link QueryOptions.sortDesc | `sortDesc`} is `true`.
-   */
-  sortKey?: Indexable<E, P, I>;
+  sortOrder?: SortOrder<E>;
 }
 
 /**
  * Return type for {@link MockDb.query | `query`} method.
+ *
+ * @typeParam E - {@link Entity | `Entity`} type.
+ * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ *
+ * @category MockDb
  */
-export interface QueryReturn<E extends Entity<P>, P = DefaultProperty> {
+export interface QueryReturn<
+  E extends Entity,
+  IndexableTypes extends TypeMap = StringifiableTypes,
+> {
   /** Number of records returned in this result set, exclusive of other pages. */
   count: number;
 
@@ -81,28 +88,33 @@ export interface QueryReturn<E extends Entity<P>, P = DefaultProperty> {
   items: E[];
 
   /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKey | `pageKey`} will be provided for next page. */
-  pageKey?: E | Pick<E, keyof E>;
+  pageKey?: E | Pick<E, PropertiesInTypeMap<E, IndexableTypes>>;
 }
 
 /**
  * Replicates a limited set of DynamoDB behaviors on local JSON data for
  * testing purposes.
  *
+ *
+ * @typeParam E - {@link Entity | `Entity`} type.
+ * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ *
  * @remarks
  * This class is intended to replicate essential DynamoDB _behaviors_, not the
  * actual API!
  *
- * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortKey | `sortKey`} as arguments and
+ * For example, the {@link MockDb.query | `query`} method accepts {@link QueryOptions.hashKey | `hashKey`} & {@link QueryOptions.sortOrder | `sortOrder`} as arguments and
  * returns limited record sets with {@link QueryReturn.pageKey | `pageKey`}. It will accept a {@link QueryOptions.filter | `filter`}
  * function, but makes no attempt to replicate DynamoDB query syntax.
  *
  * All methods can be run synchronously, or asynchronously with a normally-
  * distributed delay.
+ *
+ * @category MockDb
  */
 export class MockDb<
-  E extends Entity<P>,
-  P = DefaultProperty,
-  I = DefaultIndexableProperty,
+  E extends Entity,
+  IndexableTypes extends TypeMap = StringifiableTypes,
 > {
   /**
    * Creates a new `MockDb` instance.
@@ -132,8 +144,7 @@ export class MockDb<
    * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKey | `pageKey`} for the next
    * data page.
    *
-   * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
-   * {@link QueryOptions.sortDesc | `sortDesc: true`} to sort in descending order.
+   * Pass {@link QueryOptions.sortOrder | `sortOrder`} to sort the result set by a specific set of keys. See {@link SortOrder | `SortOrder`} for more info.
    *
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
@@ -146,21 +157,18 @@ export class MockDb<
     indexComponents,
     limit = Infinity,
     pageKey,
-    sortDesc,
-    sortKey,
+    sortOrder,
     filter,
-  }: QueryOptions<E, P, I> = {}): QueryReturn<E, P> {
+  }: QueryOptions<E, IndexableTypes> = {}): QueryReturn<E, IndexableTypes> {
     // Clone data.
     let items = [...this.data];
 
     // Find records that match hashKey.
-    if (hashKey) items = items.filter((item) => item[hashKey] === hashValue);
+    if (hashKey)
+      items = items.filter((item) => item[hashKey as keyof E] === hashValue);
 
-    // Sort records by sortKey.
-    if (sortKey)
-      items = sort<P, I, E>(items, [sortKey], {
-        [sortKey]: sortDesc,
-      } as DescMap<P, I, E>);
+    // Sort records by sortOrder.
+    if (sortOrder) items = sort(items, sortOrder);
 
     // Find pageKey index.
     const pageKeyIndex = pageKey
@@ -202,7 +210,7 @@ export class MockDb<
    * @param delayStd - Standard deviation of delay in ms, overrides constructor
    * `delayStd`.
    *
-   * @returns {@link QueryReturn | `QueryReturn`} object.
+   * @returns {@link QueryReturn | `QueryReturn`} object `Promise`.
    *
    * @remarks
    * Pass {@link QueryOptions.hashKey | `hashKey`} and {@link QueryOptions.hashValue | `hashValue`} to restrict your search to a specific data
@@ -212,8 +220,7 @@ export class MockDb<
    * Pass {@link QueryOptions.limit | `limit`} to return a limited record set and {@link QueryOptions.pageKey | `pageKey`} for the next
    * data page.
    *
-   * Pass {@link QueryOptions.sortKey | `sortKey`} to sort the result set by a specific key. Pass
-   * {@link QueryOptions.sortDesc | `sortDesc: true`} to sort in descending order.
+   * Pass {@link QueryOptions.sortOrder | `sortOrder`} to sort the result set by specific keys. See {@link SortOrder | `SortOrder`} for more info.
    *
    * Pass {@link QueryOptions.filter | `filter`} to filter records based on a custom function.
    *
@@ -221,10 +228,10 @@ export class MockDb<
    * query options.
    */
   async query(
-    options: QueryOptions<E, P, I> = {},
+    options: QueryOptions<E, IndexableTypes> = {},
     delayMean = this.delayMean,
     delayStd = this.delayStd,
-  ): Promise<QueryReturn<E, P>> {
+  ): Promise<QueryReturn<E, IndexableTypes>> {
     await setTimeout(Math.max(randomNormal(delayMean, delayStd), 0));
 
     return this.querySync(options);

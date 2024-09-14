@@ -83,7 +83,7 @@ describe('MockDb', function () {
       const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
-        sortKey: 'lastNameCanonical',
+        sortOrder: [{ property: 'lastNameCanonical' }],
         filter: ({ lastNameCanonical }) =>
           lastNameCanonical && lastNameCanonical > 'e',
       });
@@ -97,8 +97,7 @@ describe('MockDb', function () {
       const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
-        sortDesc: true,
-        sortKey: 'lastNameCanonical',
+        sortOrder: [{ property: 'lastNameCanonical', desc: true }],
         filter: ({ lastNameCanonical }) =>
           lastNameCanonical && lastNameCanonical > 'e',
       });

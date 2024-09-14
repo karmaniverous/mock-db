@@ -1,4 +1,5 @@
 {
+  "categoryOrder": ["MockDb"],
   "entryPoints": ["./src/index.ts"],
   "highlightLanguages": [
     "bash",
@@ -13,6 +14,9 @@
     "tsx",
     "typescript"
   ],
+  "navigation": {
+    "includeCategories": true
+  },
   "out": "./docs/",
   "plugin": ["typedoc-plugin-mdn-links", "typedoc-plugin-replace-text"],
   "projectDocuments": ["./CHANGELOG.md"],

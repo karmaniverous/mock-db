@@ -21,7 +21,7 @@ const mockDb = new MockDb(users);
 describe('README', function () {
   it('scan', function () {
     const scanResult = mockDb.querySync({
-      sortKey: 'id',
+      sortOrder: [{ property: 'id' }],
       filter: ({ id }) => id > 2,
     });
 
@@ -36,7 +36,7 @@ describe('README', function () {
       hashValue: 'a',
       indexComponents: ['partition', 'id'],
       limit: 2,
-      sortKey: 'id',
+      sortOrder: [{ property: 'id' }],
     };
 
     let queryResult = await mockDb.query(queryOptions, 100);

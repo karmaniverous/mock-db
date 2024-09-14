@@ -55,8 +55,8 @@ const mockDb = new MockDb(users);
 
 // Perform a "scan" synchronously across partitions with a filter.
 const scanResult = mockDb.querySync({
-  sortKey: 'id',
   filter: ({ id }) => id > 2,
+  sortOrder: [{ property: 'id' }],
 });
 
 console.log(scanResult);
@@ -76,7 +76,7 @@ const queryOptions: QueryOptions<User> = {
   hashValue: 'a',
   indexComponents: ['partition', 'id'],
   limit: 2,
-  sortKey: 'id',
+  sortOrder: [{ property: 'id' }],
 };
 
 let queryResult = await mockDb.query(queryOptions, 100);
