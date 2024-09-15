@@ -61,7 +61,7 @@ export interface QueryOptions<
    * If provided, result set will begin with the record after the one
    * represented by `pageKey`.
    */
-  pageKey?: E | Pick<E, PropertiesInTypeMap<E, IndexableTypes>>;
+  pageKey?: E | Partial<Pick<E, PropertiesInTypeMap<E, IndexableTypes>>>;
 
   /**
    * A {@link SortOrder | `SortOrder`} object specifying the sort order of the result set.
