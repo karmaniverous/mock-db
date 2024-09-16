@@ -4,7 +4,7 @@
     "url": "https://github.com/karmaniverous/mock-db/issues"
   },
   "dependencies": {
-    "@karmaniverous/entity-tools": "^0.1.1",
+    "@karmaniverous/entity-tools": "^0.2.0",
     "radash": "^12.1.0"
   },
   "description": "Mock DynamoDB-style query & scan behavior with local JSON data.",

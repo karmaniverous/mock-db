@@ -1,10 +1,10 @@
 import {
+  type DefaultTranscodeMap,
   type Entity,
-  PropertiesInTypeMap,
   sort,
   type SortOrder,
-  type StringifiableTypes,
-  type TypeMap,
+  type TranscodableProperties,
+  type TranscodeMap,
 } from '@karmaniverous/entity-tools';
 import { isFunction, pick } from 'radash';
 import { setTimeout } from 'timers/promises';
@@ -15,13 +15,13 @@ import { randomNormal } from './randomNormal';
  * Options for `query` method.
  *
  * @typeParam E - {@link Entity | `Entity`} type.
- * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ * @typeParam T - {@link TranscodeMap | `TranscodeMap`} indicating transcodable types. Defaults to {@link DefaultTranscodeMap | `DefaultTranscodeMap`}.
  *
  * @category MockDb
  */
 export interface QueryOptions<
   E extends Entity,
-  IndexableTypes extends TypeMap = StringifiableTypes,
+  T extends TranscodeMap = DefaultTranscodeMap,
 > {
   /**
    * If provided, only records that pass the filter will be returned.
@@ -38,18 +38,18 @@ export interface QueryOptions<
    * If provided, query will only return records with matching {@link QueryOptions.hashValue | `hashValue`}. If
    * not, query behaves like a DynamoDB scan.
    */
-  hashKey?: PropertiesInTypeMap<E, IndexableTypes>;
+  hashKey?: TranscodableProperties<E, T>;
 
   /**
    * If provided with {@link QueryOptions.hashKey | `hashKey`}, only matching records will be returned.
    */
-  hashValue?: IndexableTypes[keyof IndexableTypes];
+  hashValue?: T[keyof T];
 
   /**
    * If provided, returned {@link QueryReturn.pageKey | `pageKey`} will only contain these components.
    * Otherwise it will contain the entire record.
    */
-  indexComponents?: PropertiesInTypeMap<E, IndexableTypes>[];
+  indexComponents?: TranscodableProperties<E, T>[];
 
   /**
    * If provided, query will only return up to `limit` records along with
@@ -61,7 +61,7 @@ export interface QueryOptions<
    * If provided, result set will begin with the record after the one
    * represented by `pageKey`.
    */
-  pageKey?: E | Partial<Pick<E, PropertiesInTypeMap<E, IndexableTypes>>>;
+  pageKey?: E | Partial<Pick<E, TranscodableProperties<E, T>>>;
 
   /**
    * A {@link SortOrder | `SortOrder`} object specifying the sort order of the result set.
@@ -73,13 +73,13 @@ export interface QueryOptions<
  * Return type for {@link MockDb.query | `query`} method.
  *
  * @typeParam E - {@link Entity | `Entity`} type.
- * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ * @typeParam T - {@link TranscodeMap | `TranscodeMap`} indicating transcodable types. Defaults to {@link DefaultTranscodeMap | `DefaultTranscodeMap`}.
  *
  * @category MockDb
  */
 export interface QueryReturn<
   E extends Entity,
-  IndexableTypes extends TypeMap = StringifiableTypes,
+  T extends TranscodeMap = DefaultTranscodeMap,
 > {
   /** Number of records returned in this result set, exclusive of other pages. */
   count: number;
@@ -88,7 +88,7 @@ export interface QueryReturn<
   items: E[];
 
   /** If {@link QueryOptions.limit | `limit`} was reached, {@link QueryOptions.pageKey | `pageKey`} will be provided for next page. */
-  pageKey?: E | Pick<E, PropertiesInTypeMap<E, IndexableTypes>>;
+  pageKey?: E | Pick<E, TranscodableProperties<E, T>>;
 }
 
 /**
@@ -97,7 +97,7 @@ export interface QueryReturn<
  *
  *
  * @typeParam E - {@link Entity | `Entity`} type.
- * @typeParam IndexableTypes - {@link TypeMap | `TypeMap`} indicating indexable types. Defaults to {@link StringifiableTypes | `StringifiableTypes`}.
+ * @typeParam T - {@link TranscodeMap | `TranscodeMap`} indicating transcodable types. Defaults to {@link DefaultTranscodeMap | `DefaultTranscodeMap`}.
  *
  * @remarks
  * This class is intended to replicate essential DynamoDB _behaviors_, not the
@@ -114,7 +114,7 @@ export interface QueryReturn<
  */
 export class MockDb<
   E extends Entity,
-  IndexableTypes extends TypeMap = StringifiableTypes,
+  T extends TranscodeMap = DefaultTranscodeMap,
 > {
   /**
    * Creates a new `MockDb` instance.
@@ -159,7 +159,7 @@ export class MockDb<
     pageKey,
     sortOrder,
     filter,
-  }: QueryOptions<E, IndexableTypes> = {}): QueryReturn<E, IndexableTypes> {
+  }: QueryOptions<E, T> = {}): QueryReturn<E, T> {
     // Clone data.
     let items = [...this.data];
 
@@ -228,10 +228,10 @@ export class MockDb<
    * query options.
    */
   async query(
-    options: QueryOptions<E, IndexableTypes> = {},
+    options: QueryOptions<E, T> = {},
     delayMean = this.delayMean,
     delayStd = this.delayStd,
-  ): Promise<QueryReturn<E, IndexableTypes>> {
+  ): Promise<QueryReturn<E, T>> {
     await setTimeout(Math.max(randomNormal(delayMean, delayStd), 0));
 
     return this.querySync(options);
