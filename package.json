@@ -4,7 +4,7 @@
     "url": "https://github.com/karmaniverous/mock-db/issues"
   },
   "dependencies": {
-    "@karmaniverous/entity-tools": "^0.2.0",
+    "@karmaniverous/entity-tools": "^0.2.3",
     "radash": "^12.1.0"
   },
   "description": "Mock DynamoDB-style query & scan behavior with local JSON data.",
@@ -46,7 +46,7 @@
     "typedoc-plugin-mdn-links": "^3.2.12",
     "typedoc-plugin-replace-text": "^4.0.0",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.5.0"
+    "typescript-eslint": "^8.6.0"
   },
   "exports": {
     ".": {
