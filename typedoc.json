@@ -17,7 +17,7 @@
   "navigation": {
     "includeCategories": true
   },
-  "out": "./docs/mock-db",
+  "out": "./docs",
   "plugin": ["typedoc-plugin-mdn-links", "typedoc-plugin-replace-text"],
   "projectDocuments": ["./CHANGELOG.md"],
   "replaceText": {
