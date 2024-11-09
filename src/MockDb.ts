@@ -16,8 +16,6 @@ import { randomNormal } from './randomNormal';
  *
  * @typeParam E - {@link Entity | `Entity`} type.
  * @typeParam T - {@link TranscodeMap | `TranscodeMap`} indicating transcodable types. Defaults to {@link DefaultTranscodeMap | `DefaultTranscodeMap`}.
- *
- * @category MockDb
  */
 export interface QueryOptions<
   E extends Entity,
@@ -29,8 +27,6 @@ export interface QueryOptions<
    * @param item - Record to test.
    *
    * @returns truthy if record should be included in result set.
-   *
-   * @category MockDb
    */
   filter?: (item: E) => unknown;
 
@@ -74,8 +70,6 @@ export interface QueryOptions<
  *
  * @typeParam E - {@link Entity | `Entity`} type.
  * @typeParam T - {@link TranscodeMap | `TranscodeMap`} indicating transcodable types. Defaults to {@link DefaultTranscodeMap | `DefaultTranscodeMap`}.
- *
- * @category MockDb
  */
 export interface QueryReturn<
   E extends Entity,
@@ -109,8 +103,6 @@ export interface QueryReturn<
  *
  * All methods can be run synchronously, or asynchronously with a normally-
  * distributed delay.
- *
- * @category MockDb
  */
 export class MockDb<
   E extends Entity,
