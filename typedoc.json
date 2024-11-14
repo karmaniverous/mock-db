@@ -23,6 +23,7 @@
     "tsx",
     "typescript"
   ],
+  "hostedBaseUrl": "https://docs.karmanivero.us/mock-db",
   "out": "./docs",
   "plugin": ["typedoc-plugin-mdn-links", "typedoc-plugin-replace-text"],
   "projectDocuments": ["./CHANGELOG.md"],
