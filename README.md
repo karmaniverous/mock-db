@@ -6,19 +6,19 @@
 
 # MockDb
 
-The [`MockDb`](https://docs.karmanivero.us/mock-db/classes/index.MockDb.html) class wires up a local JSON data store to replicate some key behaviors of DynamoDB for testing purposes.
+The [`MockDb`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html) class wires up a local JSON data store to replicate some key behaviors of DynamoDB for testing purposes.
 
 MockDb is not a database in any meaningful sense, nor does it express anything like the full range of DynamoDB's features! It's just a limited test fixture, to which I add features as I need them.
 
 The current feature set includes:
 
-- [`query`](https://docs.karmanivero.us/mock-db/classes/index.MockDb.html#query) & [`querySync`](https://docs.karmanivero.us/mock-db/classes/index.MockDb.html#querySync) - Depending on the options passed, these methods behave like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
+- [`query`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#query) & [`querySync`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#querySync) - Depending on the options passed, these methods behave like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
 
 - All methods exist in synchronous & asynchronous versions. Async methods run with a normally-distributed delay.
 
 That's it!
 
-MockDB depends on [`entity-tools`](https://github.com/karmaniverous/entity-tools) to define entity properties, indexable properties, and records. This package also provides the [`sort`](https://karmanivero.us/entity-tools/functions/index.sort.html) function used internally by [`MockDb.query`](https://karmanivero.us/mock-db/classes/index.MockDb.html#query).
+MockDB depends on [`entity-tools`](https://github.com/karmaniverous/entity-tools) to define entity properties, indexable properties, and records. This package also provides the [`sort`](https://docs.karmanivero.us/entity-tools/functions/entity_tools.sort.html) function used internally by [`MockDb.query`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#query).
 
 ## Usage
 
