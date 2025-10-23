@@ -37,3 +37,7 @@
   - Limited ambient types to ["node"] to avoid implicit inclusion of unrelated
     @types packages (prevents TS2688 for eslint__js).
   - Removed unsupported "all" option from Vitest V8 coverage config.
+- Fix follow-ups after enabling repo-wide TS checks:
+  - Added @types/fs-extra to satisfy TS7016 for rollup.config.ts.
+  - Updated src/readme.test.ts to import from './MockDb' directly to avoid
+    SSR root import resolving to a non-constructible value in Vitest.

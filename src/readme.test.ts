@@ -1,7 +1,7 @@
 import type { Entity } from '@karmaniverous/entity-tools';
 import { describe, expect, it } from 'vitest';
 
-import { MockDb, type QueryOptions } from '.';
+import { MockDb, type QueryOptions } from './MockDb';
 
 interface User extends Entity {
   partition: string;
