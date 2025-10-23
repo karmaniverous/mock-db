@@ -1,5 +1,11 @@
 # Project Prompt (repo-specific policies)
 
+- Type checking
+  - All TypeScript files in the repository MUST be type-checked, including TS
+    config files (e.g., rollup.config.ts, vitest.config.ts).
+  - JS files are not part of the TS program.
+  - Ambient types are limited to "node" to avoid unintended inclusion of other
+    @types packages.
 - Testing
   - Use Vitest for all tests. Mocha/NYC are not used.
   - Test files use the pattern *.test.ts and run under the Node environment.

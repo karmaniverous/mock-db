@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "checkJs": false,
+    "types": ["node"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
@@ -15,5 +16,5 @@
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "exclude": ["coverage/", "dist/", "docs/"],
-  "include": ["src/**/*"]
+  "include": ["**/*.ts"]
 }

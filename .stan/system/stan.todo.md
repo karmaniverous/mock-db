@@ -4,9 +4,6 @@
 
 - Verify CI picks up Vitest coverage artifacts (html/lcov) as expected.
 - Optionally adopt eslint-plugin-vitest for additional test linting rules.
-- Consider excluding eslint.config.js from TS checking or disabling checkJs
-  if typedoc/build encounters JS config typing issues (out of scope for this
-  test migration).
 - Review and prune unused devDependencies flagged by knip (e.g., ts-node,
   source-map-support, auto-changelog) in a follow-up.
 
@@ -35,3 +32,8 @@
   - Kept types output at dist/index.d.ts for package.json compatibility.
 - Restrict tsconfig "include" to "src/**/*" to avoid type-checking config files
   (resolves build/docs TypeScript errors).
+- Enforce repo-wide TS type-check (including config .ts files):
+  - tsconfig "include" set to "**/*.ts" to include all TS files.
+  - Limited ambient types to ["node"] to avoid implicit inclusion of unrelated
+    @types packages (prevents TS2688 for eslint__js).
+  - Removed unsupported "all" option from Vitest V8 coverage config.
