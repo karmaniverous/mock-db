@@ -7,6 +7,8 @@
 - Consider excluding eslint.config.js from TS checking or disabling checkJs
   if typedoc/build encounters JS config typing issues (out of scope for this
   test migration).
+- Review and prune unused devDependencies flagged by knip (e.g., ts-node,
+  source-map-support, auto-changelog) in a follow-up.
 
 ## Completed (recent)
 
@@ -20,3 +22,9 @@
   - Dropped mocha plugin from ESLint config.
   - Updated VS Code recommendations/settings for Vitest.
 
+- Fix build/docs after Vitest migration:
+  - Limited TypeScript "include" to src/**/* and disabled allowJs/checkJs to
+    avoid pulling JS configs into the TS program.
+  - Removed unsupported "all" option from Vitest V8 coverage config.
+  - Updated rollup.config.ts to avoid JSON import assertions and corrected
+    plugin array usage; externals resolved via function. Added "typecheck" npm script.

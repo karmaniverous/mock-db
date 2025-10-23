@@ -5,8 +5,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import type { InputOptions, RollupOptions } from 'rollup';
 import dtsPlugin from 'rollup-plugin-dts';
-
-import pkg from './package.json' assert { type: 'json' };
+import path from 'node:path';
 
 const outputPath = `dist`;
 
@@ -19,15 +18,11 @@ const commonPlugins = [
 
 const commonAliases: Alias[] = [];
 
-type Package = Record<string, Record<string, string> | undefined>;
-
 const commonInputOptions: InputOptions = {
   input: 'src/index.ts',
-  external: [
-    ...Object.keys((pkg as unknown as Package).dependencies ?? {}),
-    ...Object.keys((pkg as unknown as Package).peerDependencies ?? {}),
-  ],
-  plugins: [aliasPlugin({ entries: commonAliases }), commonPlugins],
+  // Treat all non-relative, non-absolute imports as external (node_modules)
+  external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
+  plugins: [aliasPlugin({ entries: commonAliases }), ...commonPlugins],
 };
 
 const config: RollupOptions[] = [
@@ -60,7 +55,7 @@ const config: RollupOptions[] = [
   // Type definitions output.
   {
     ...commonInputOptions,
-    plugins: [commonInputOptions.plugins, dtsPlugin()],
+    plugins: [...(commonInputOptions.plugins ?? []), dtsPlugin()],
     output: [
       {
         extend: true,

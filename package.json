@@ -113,6 +113,7 @@
     "knip": "knip",
     "lint": "eslint src/** && prettier -c src",
     "lint:fix": "eslint --fix src/** && prettier --write src",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "release": "dotenvx run -f .env.local -- release-it",
     "release:pre": "dotenvx run -f .env.local -- release-it --no-git.requireBranch --github.prerelease --preRelease",
     "test": "vitest run --coverage",
