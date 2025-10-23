@@ -28,3 +28,10 @@
   - Removed unsupported "all" option from Vitest V8 coverage config.
   - Updated rollup.config.ts to avoid JSON import assertions and corrected
     plugin array usage; externals resolved via function. Added "typecheck" npm script.
+
+- Adopt Rollup config modeled from reference project:
+  - Added alias "@", externalized Node built-ins and runtime deps, minified
+    library builds, and copied stan.system.md into dist.
+  - Kept types output at dist/index.d.ts for package.json compatibility.
+- Restrict tsconfig "include" to "src/**/*" to avoid type-checking config files
+  (resolves build/docs TypeScript errors).

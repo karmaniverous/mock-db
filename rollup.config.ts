@@ -1,69 +1,138 @@
-import aliasPlugin, { Alias } from '@rollup/plugin-alias';
+/** See <stanPath>/system/stan.project.md for global requirements. */
+import aliasPlugin, { type Alias } from '@rollup/plugin-alias';
 import commonjsPlugin from '@rollup/plugin-commonjs';
 import jsonPlugin from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terserPlugin from '@rollup/plugin-terser';
 import typescriptPlugin from '@rollup/plugin-typescript';
-import type { InputOptions, RollupOptions } from 'rollup';
-import dtsPlugin from 'rollup-plugin-dts';
+import fs from 'fs-extra';
 import path from 'node:path';
+import { builtinModules } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import type {
+  InputOptions,
+  OutputOptions,
+  Plugin,
+  RollupOptions,
+} from 'rollup';
+import dtsPlugin from 'rollup-plugin-dts';
 
-const outputPath = `dist`;
+const outputPath = 'dist';
 
-const commonPlugins = [
-  commonjsPlugin(),
-  jsonPlugin(),
-  nodeResolve(),
-  typescriptPlugin(),
-];
+// Path alias @ -> <abs>/src (absolute to avoid module duplication warnings in Rollup)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const srcAbs = path.resolve(__dirname, 'src');
+const aliases: Alias[] = [{ find: '@', replacement: srcAbs }];
+const alias = aliasPlugin({ entries: aliases });
 
-const commonAliases: Alias[] = [];
+// Treat Node built-ins and node: specifiers as external.
+const nodeExternals = new Set([
+  ...builtinModules,
+  ...builtinModules.map((m) => `node:${m}`),
+]);
 
-const commonInputOptions: InputOptions = {
-  input: 'src/index.ts',
-  // Treat all non-relative, non-absolute imports as external (node_modules)
-  external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
-  plugins: [aliasPlugin({ entries: commonAliases }), ...commonPlugins],
+// Read runtime deps from package.json to keep them external (dependencies + peerDependencies).
+type Pkg = {
+  dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+};
+const pkgJsonPath = path.resolve(__dirname, 'package.json');
+let runtimeDeps = new Set<string>();
+try {
+  const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8')) as Pkg;
+  runtimeDeps = new Set([
+    ...Object.keys(pkg.dependencies ?? {}),
+    ...Object.keys(pkg.peerDependencies ?? {}),
+  ]);
+} catch {
+  runtimeDeps = new Set();
+}
+
+// Additional externals that should not be bundled (example: platform fallback deps).
+const externalPkgs = new Set<string>([
+  // 'clipboardy',
+  // 'fs-extra', // keep if used at runtime; config-only usage is already out of bundle
+]);
+
+const copyDocsPlugin = (dest: string): Plugin => {
+  return {
+    name: 'stan-copy-docs',
+    async writeBundle() {
+      const fromSystem = path.resolve(__dirname, '.stan', 'system');
+      const candidates = [
+        {
+          src: path.join(fromSystem, 'stan.system.md'),
+          dest: path.join(dest, 'stan.system.md'),
+        },
+      ];
+      try {
+        await fs.ensureDir(dest);
+        for (const c of candidates) {
+          if (await fs.pathExists(c.src)) await fs.copyFile(c.src, c.dest);
+        }
+      } catch {
+        // best-effort
+      }
+    },
+  };
 };
 
-const config: RollupOptions[] = [
-  // ESM output.
-  {
-    ...commonInputOptions,
-    output: [
-      {
-        dir: `${outputPath}/mjs`,
-        extend: true,
-        format: 'esm',
-        preserveModules: true,
-      },
-    ],
-  },
+const makePlugins = (minify: boolean, extras: Plugin[] = []): Plugin[] => {
+  const base: Plugin[] = [
+    alias,
+    nodeResolve({ exportConditions: ['node', 'module', 'default'] }),
+    commonjsPlugin(),
+    jsonPlugin(),
+    typescriptPlugin(),
+    ...extras,
+  ];
+  return minify
+    ? [...base, terserPlugin({ format: { comments: false } })]
+    : base;
+};
 
-  // CommonJS output.
-  {
-    ...commonInputOptions,
-    output: [
-      {
-        dir: `${outputPath}/cjs`,
-        extend: true,
-        format: 'cjs',
-        preserveModules: true,
-      },
-    ],
+const commonInputOptions = (
+  minify: boolean,
+  extras: Plugin[] = [],
+): InputOptions => ({
+  plugins: makePlugins(minify, extras),
+  onwarn(warning, defaultHandler) {
+    defaultHandler(warning);
   },
+  external: (id) =>
+    nodeExternals.has(id) ||
+    runtimeDeps.has(id) ||
+    externalPkgs.has(id) ||
+    // Also treat deep subpath imports of runtime deps/extras as external
+    Array.from(runtimeDeps).some((p) => id === p || id.startsWith(`${p}/`)) ||
+    Array.from(externalPkgs).some((p) => id === p || id.startsWith(`${p}/`)),
+});
 
-  // Type definitions output.
-  {
-    ...commonInputOptions,
-    plugins: [...(commonInputOptions.plugins ?? []), dtsPlugin()],
-    output: [
-      {
-        extend: true,
-        file: `${outputPath}/index.d.ts`,
-        format: 'esm',
-      },
-    ],
-  },
+const outCommon = (dest: string): OutputOptions[] => [
+  { dir: `${dest}/mjs`, format: 'esm', sourcemap: false },
+  { dir: `${dest}/cjs`, format: 'cjs', sourcemap: false },
 ];
 
-export default config;
+export const buildLibrary = (dest: string): RollupOptions => ({
+  input: 'src/index.ts',
+  output: outCommon(dest),
+  ...commonInputOptions(
+    true,
+    // Copy docs once from library config
+    [copyDocsPlugin(dest)],
+  ),
+});
+
+export const buildTypes = (dest: string): RollupOptions => ({
+  input: 'src/index.ts',
+  // Keep compatibility with existing package.json "types": "dist/index.d.ts"
+  output: [{ file: `${dest}/index.d.ts`, format: 'esm' }],
+  // Ensure alias resolution works during type bundling to avoid unresolved "@/..." warnings.
+  plugins: [alias, dtsPlugin()],
+});
+
+export default [
+  buildLibrary(outputPath),
+  buildTypes(outputPath),
+];
