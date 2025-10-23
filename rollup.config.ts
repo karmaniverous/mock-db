@@ -5,7 +5,7 @@ import jsonPlugin from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terserPlugin from '@rollup/plugin-terser';
 import typescriptPlugin from '@rollup/plugin-typescript';
-import fs from 'fs-extra';
+import { promises as fsp } from 'node:fs';
 import path from 'node:path';
 import { builtinModules } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -67,9 +67,16 @@ const copyDocsPlugin = (dest: string): Plugin => {
         },
       ];
       try {
-        await fs.ensureDir(dest);
+        await fsp.mkdir(dest, { recursive: true });
         for (const c of candidates) {
-          if (await fs.pathExists(c.src)) await fs.copyFile(c.src, c.dest);
+          let exists = false;
+          try {
+            await fsp.access(c.src);
+            exists = true;
+          } catch {
+            exists = false;
+          }
+          if (exists) await fsp.copyFile(c.src, c.dest);
         }
       } catch {
         // best-effort

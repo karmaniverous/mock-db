@@ -40,4 +40,10 @@
 - Fix follow-ups after enabling repo-wide TS checks:
   - Added @types/fs-extra to satisfy TS7016 for rollup.config.ts.
   - Updated src/readme.test.ts to import from './MockDb' directly to avoid
-    SSR root import resolving to a non-constructible value in Vitest.
+    SSR root import resolving to a non-constructible value in Vitest.
+
+- Refactor rollup config to avoid fs-extra dependency:
+  - Replaced fs-extra with Node fs/promises (mkdir/access/copyFile) in
+    rollup.config.ts copyDocsPlugin.
+  - Removed fs-extra and @types/fs-extra from devDependencies.
+  - Resolves TS7016 in typecheck/build/docs while keeping all TS files typed.
