@@ -1,7 +1,7 @@
 import type { Entity } from '@karmaniverous/entity-tools';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 
-import { MockDb, QueryOptions } from '../src';
+import { MockDb, type QueryOptions } from '.';
 import users from './users.json' assert { type: 'json' };
 
 interface User extends Entity {
@@ -20,9 +20,9 @@ interface User extends Entity {
 
 const mockDb = new MockDb(users as User[]);
 
-describe('MockDb', function () {
-  describe('query', function () {
-    it('hashKey', async function () {
+describe('MockDb', () => {
+  describe('query', () => {
+    it('hashKey', async () => {
       const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -35,7 +35,7 @@ describe('MockDb', function () {
       expect(queryResult.pageKey).to.equal(undefined);
     });
 
-    it('constructor sync hashKey', function () {
+    it('constructor sync hashKey', () => {
       const queryResult = mockDb.querySync({
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -48,7 +48,7 @@ describe('MockDb', function () {
       expect(queryResult.pageKey).to.equal(undefined);
     });
 
-    it('pageKey', async function () {
+    it('pageKey', async () => {
       const queryOptions: QueryOptions<User> = {
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -79,7 +79,7 @@ describe('MockDb', function () {
       expect(queryResult.pageKey).to.equal(undefined);
     });
 
-    it('sortKey', async function () {
+    it('sortKey', async () => {
       const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',
@@ -93,7 +93,7 @@ describe('MockDb', function () {
       expect(queryResult.items[0].lastNameCanonical).to.equal('hutson');
     });
 
-    it('sortKey desc', async function () {
+    it('sortKey desc', async () => {
       const queryResult = await mockDb.query({
         hashKey: 'entityPK',
         hashValue: 'user!0',

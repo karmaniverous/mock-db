@@ -1,0 +1,26 @@
+stan-core:
+  stanPath: .stan
+  excludes:
+    - '*.local'
+    - assets/**
+    - CHANGELOG.md
+    - docs/**
+    - package-lock.json
+stan-cli:
+  cliDefaults:
+    run:
+      facets: true
+      plan: false
+      sequential: true
+  patchOpenCommand: code -g {file}
+  scripts: 
+    typecheck: npm run typecheck
+    lint: npm run lint:fix
+    test: npm run test
+    build:
+      script: cross-env NO_COLOR=1 npm run build
+      warnPattern: loaded [\\w.]+ with warnings(?!.*outputToFilesystem option is defaulting to true)
+    docs:
+      script: npm run docs -- --emit none
+      warnPattern: \\[warning\\]
+    knip: npm run knip

@@ -11,11 +11,5 @@
   "git.enableSmartCommit": true,
   "javascript.preferences.importModuleSpecifierEnding": "minimal",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "mochaExplorer.monkeyPatch": false,
-  "mochaExplorer.nodeArgv": [
-    "--loader=ts-node/esm",
-    "--no-warnings=ExperimentalWarning",
-    "--experimental-specifier-resolution=node"
-  ],
   "testExplorer.mergeSuites": true
 }

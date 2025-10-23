@@ -1,5 +1,5 @@
 import type { Entity } from '@karmaniverous/entity-tools';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 
 import { MockDb, type QueryOptions } from '.';
 
@@ -18,8 +18,8 @@ const users: User[] = [
 
 const mockDb = new MockDb(users);
 
-describe('README', function () {
-  it('scan', function () {
+describe('README', () => {
+  it('scan', () => {
     const scanResult = mockDb.querySync({
       sortOrder: [{ property: 'id' }],
       filter: ({ id }) => id > 2,
@@ -30,7 +30,7 @@ describe('README', function () {
     expect(scanResult.count).to.equal(2);
   });
 
-  it('async query', async function () {
+  it('async query', async () => {
     const queryOptions: QueryOptions<User> = {
       hashKey: 'partition',
       hashValue: 'a',
