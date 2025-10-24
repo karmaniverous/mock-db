@@ -65,4 +65,10 @@
   - Replaced eslint.config.js with eslint.config.ts (flat config).
   - Strict, type-aware linting enabled via @typescript-eslint across ALL TS
     files, including tests and configs.
-  - Updated lint scripts to lint and format the entire repo (not src-only).
+  - Updated lint scripts to lint and format the entire repo (not src-only).
+
+- ESLint TS config hardening:
+  - Switched to ESLint's defineConfig API (replaces deprecated tseslint.config).
+  - Expanded ignores to exclude .rollup.cache, docs/**, and all *.js outputs.
+  - Removed unnecessary optional chaining/nullish coalescing in Vitest globals.
+  - Lint now targets only TypeScript sources, including tests and configs.

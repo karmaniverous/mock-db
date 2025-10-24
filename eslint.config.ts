@@ -1,13 +1,22 @@
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import prettierPlugin from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import tsDocPlugin from 'eslint-plugin-tsdoc';
 import vitestPlugin from 'eslint-plugin-vitest';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-  // Ignore build artifacts and coverage
-  { ignores: ['coverage/**/*', 'dist/**/*'] },
+export default defineConfig([
+  // Global ignores (keep ESLint away from build/cache JS)
+  {
+    ignores: [
+      'coverage/**/*',
+      'dist/**/*',
+      'docs/**/*',
+      '.rollup.cache/**/*',
+      '**/*.js',
+    ],
+  },
   // Base + strict type-checked rules
   {
     extends: [
@@ -43,7 +52,7 @@ export default tseslint.config(
       vitest: vitestPlugin,
     },
     languageOptions: {
-      globals: vitestPlugin.environments?.env?.globals ?? {},
+      globals: vitestPlugin.environments.env.globals,
     },
     rules: {
       ...(vitestPlugin.configs?.recommended?.rules ?? {}),
@@ -51,4 +60,4 @@ export default tseslint.config(
       'vitest/valid-expect': 'off',
     },
   },
-);
+]);
