@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import vitest from '@vitest/eslint-plugin';
+import type { Plugin } from 'eslint';
 import { defineConfig } from 'eslint/config';
 import prettierPlugin from 'eslint-config-prettier';
 import prettierEslintPlugin from 'eslint-plugin-prettier';
@@ -52,13 +53,11 @@ export default defineConfig([
   {
     files: ['**/*.test.ts'],
     plugins: {
-      vitest,
+      vitest: vitest as unknown as Plugin,
     },
-    languageOptions: {
-      globals: vitest.environments.env.globals,
-    },
+    // No explicit globals: tests import { describe, it, expect } from 'vitest'
     rules: {
-      ...vitest.configs.recommended.rules,
+      ...(vitest.configs.recommended.rules as any),
       // Allow Chai-style chainers provided by Vitest (e.g., .to.equal)
       'vitest/valid-expect': 'off',
     },

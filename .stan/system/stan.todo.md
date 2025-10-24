@@ -91,3 +91,8 @@
 - ESLint Vitest plugin migration:
   - Replaced deprecated eslint-plugin-vitest with @vitest/eslint-plugin and
     updated eslint.config.ts to use the new plugin import and configs.
+
+- Vitest ESLint plugin typing & dep scope:
+  - Cast plugin object to ESLint Plugin type to satisfy TS in eslint.config.ts,
+    and removed explicit vitest globals (tests import from 'vitest').
+  - Moved @vitest/eslint-plugin to devDependencies.
