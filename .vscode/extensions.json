@@ -2,6 +2,9 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "ZixuanChen.vitest-explorer"
+    "github.vscode-github-actions",
+    "gruntfuggly.todo-tree",
+    "redhat.vscode-yaml",
+    "vitest.explorer"
   ]
 }

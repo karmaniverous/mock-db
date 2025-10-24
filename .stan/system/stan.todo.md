@@ -82,3 +82,12 @@
 - Knip configuration:
   - Added knip.json to ignore docs/\*\* and to ignore devDependencies
     auto-changelog and cross-env.
+
+- Prettier integrated with ESLint:
+  - Added eslint-plugin-prettier and enabled 'prettier/prettier' rule so
+    `eslint . --fix` also formats with Prettier.
+  - Updated knip.json to ignore 'prettier' (used via ESLint plugin).
+
+- ESLint Vitest plugin migration:
+  - Replaced deprecated eslint-plugin-vitest with @vitest/eslint-plugin and
+    updated eslint.config.ts to use the new plugin import and configs.
