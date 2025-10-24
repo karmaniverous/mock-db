@@ -2,17 +2,20 @@ import eslint from '@eslint/js';
 import prettierPlugin from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import tsDocPlugin from 'eslint-plugin-tsdoc';
-import tseslint from 'typescript-eslint';
 import vitestPlugin from 'eslint-plugin-vitest';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  // Ignore build artifacts and coverage
+  { ignores: ['coverage/**/*', 'dist/**/*'] },
+  // Base + strict type-checked rules
   {
-    extends: [prettierPlugin],
-    ignores: ['coverage/**/*', 'dist/**/*'],
-
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.strictTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
+      prettierPlugin,
+    ],
     languageOptions: {
       parserOptions: {
         project: true,

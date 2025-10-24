@@ -59,4 +59,10 @@
 
 - Vitest ESLint integration:
   - Disabled vitest/valid-expect for *.test.ts to allow Chai-style chainers
-    used by Vitest (e.g., expect(x).to.equal(y)).
+    used by Vitest (e.g., expect(x).to.equal(y)).
+
+- Migrate ESLint config to TypeScript:
+  - Replaced eslint.config.js with eslint.config.ts (flat config).
+  - Strict, type-aware linting enabled via @typescript-eslint across ALL TS
+    files, including tests and configs.
+  - Updated lint scripts to lint and format the entire repo (not src-only).

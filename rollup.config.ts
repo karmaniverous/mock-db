@@ -1,14 +1,15 @@
 /** See <stanPath>/system/stan.project.md for global requirements. */
+import { promises as fsp, readFileSync } from 'node:fs';
+import { builtinModules } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import aliasPlugin, { type Alias } from '@rollup/plugin-alias';
 import commonjsPlugin from '@rollup/plugin-commonjs';
 import jsonPlugin from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terserPlugin from '@rollup/plugin-terser';
 import typescriptPlugin from '@rollup/plugin-typescript';
-import { promises as fsp, readFileSync } from 'node:fs';
-import path from 'node:path';
-import { builtinModules } from 'node:module';
-import { fileURLToPath } from 'node:url';
 import type {
   InputOptions,
   OutputOptions,
@@ -33,10 +34,10 @@ const nodeExternals = new Set([
 ]);
 
 // Read runtime deps from package.json to keep them external (dependencies + peerDependencies).
-type Pkg = {
+interface Pkg {
   dependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
-};
+}
 const pkgJsonPath = path.resolve(__dirname, 'package.json');
 let runtimeDeps = new Set<string>();
 try {
