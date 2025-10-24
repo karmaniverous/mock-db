@@ -5,7 +5,7 @@ import jsonPlugin from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terserPlugin from '@rollup/plugin-terser';
 import typescriptPlugin from '@rollup/plugin-typescript';
-import { promises as fsp } from 'node:fs';
+import { promises as fsp, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { builtinModules } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -40,7 +40,7 @@ type Pkg = {
 const pkgJsonPath = path.resolve(__dirname, 'package.json');
 let runtimeDeps = new Set<string>();
 try {
-  const pkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8')) as Pkg;
+  const pkg = JSON.parse(readFileSync(pkgJsonPath, 'utf8')) as Pkg;
   runtimeDeps = new Set([
     ...Object.keys(pkg.dependencies ?? {}),
     ...Object.keys(pkg.peerDependencies ?? {}),

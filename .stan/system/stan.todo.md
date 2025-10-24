@@ -47,3 +47,6 @@
     rollup.config.ts copyDocsPlugin.
   - Removed fs-extra and @types/fs-extra from devDependencies.
   - Resolves TS7016 in typecheck/build/docs while keeping all TS files typed.
+- Rollup config typecheck fix:
+  - Imported readFileSync from node:fs and used it to read package.json for
+    externals list, resolving TS2304 in typecheck/build/docs.
