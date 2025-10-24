@@ -3,6 +3,7 @@ import prettierPlugin from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import tsDocPlugin from 'eslint-plugin-tsdoc';
 import tseslint from 'typescript-eslint';
+import vitestPlugin from 'eslint-plugin-vitest';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -31,5 +32,16 @@ export default tseslint.config(
       'simple-import-sort/exports': 'error',
       'tsdoc/syntax': 'warn',
     },
+  },
+  // Vitest rules and globals for test files
+  {
+    files: ['**/*.test.ts'],
+    plugins: {
+      vitest: vitestPlugin,
+    },
+    languageOptions: {
+      globals: vitestPlugin.environments?.env?.globals ?? {},
+    },
+    rules: { ...(vitestPlugin.configs?.recommended?.rules ?? {}) },
   },
 );

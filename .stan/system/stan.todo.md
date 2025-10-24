@@ -49,4 +49,10 @@
   - Resolves TS7016 in typecheck/build/docs while keeping all TS files typed.
 - Rollup config typecheck fix:
   - Imported readFileSync from node:fs and used it to read package.json for
-    externals list, resolving TS2304 in typecheck/build/docs.
+    externals list, resolving TS2304 in typecheck/build/docs.
+
+- Prune unused devDependencies and add test linting:
+  - Removed devDeps no longer used: ts-node, source-map-support,
+    @types/eslint__js, @types/eslint-config-prettier.
+  - Added eslint-plugin-vitest and enabled recommended rules/globals for
+    *.test.ts files.
