@@ -55,4 +55,8 @@
   - Removed devDeps no longer used: ts-node, source-map-support,
     @types/eslint__js, @types/eslint-config-prettier.
   - Added eslint-plugin-vitest and enabled recommended rules/globals for
-    *.test.ts files.
+    *.test.ts files.
+
+- Vitest ESLint integration:
+  - Disabled vitest/valid-expect for *.test.ts to allow Chai-style chainers
+    used by Vitest (e.g., expect(x).to.equal(y)).
