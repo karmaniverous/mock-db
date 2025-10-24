@@ -78,3 +78,7 @@
 - ESLint config cleanup:
   - Replaced optional chaining/nullish coalescing when spreading Vitest
     recommended rules with direct access to avoid self-lint errors.
+
+- Knip configuration:
+  - Added knip.json to ignore docs/\*\* and to ignore devDependencies
+    auto-changelog and cross-env.

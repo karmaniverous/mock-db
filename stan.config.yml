@@ -16,7 +16,7 @@ stan-cli:
   scripts:
     typecheck: npm run typecheck
     lint: npm run lint:fix
-    test: npm run test
+    test: npm run test -- --no-color
     build:
       script: cross-env NO_COLOR=1 npm run build
       warnPattern: loaded [\\w.]+ with warnings(?!.*outputToFilesystem option is defaulting to true)
