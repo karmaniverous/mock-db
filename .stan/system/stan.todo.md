@@ -20,7 +20,7 @@
   - Updated VS Code recommendations/settings for Vitest.
 
 - Fix build/docs after Vitest migration:
-  - Limited TypeScript "include" to src/**/* and disabled allowJs/checkJs to
+  - Limited TypeScript "include" to src/\*_/_ and disabled allowJs/checkJs to
     avoid pulling JS configs into the TS program.
   - Removed unsupported "all" option from Vitest V8 coverage config.
   - Updated rollup.config.ts to avoid JSON import assertions and corrected
@@ -30,13 +30,14 @@
   - Added alias "@", externalized Node built-ins and runtime deps, minified
     library builds, and copied stan.system.md into dist.
   - Kept types output at dist/index.d.ts for package.json compatibility.
-- Restrict tsconfig "include" to "src/**/*" to avoid type-checking config files
+- Restrict tsconfig "include" to "src/\*_/_" to avoid type-checking config files
   (resolves build/docs TypeScript errors).
 - Enforce repo-wide TS type-check (including config .ts files):
-  - tsconfig "include" set to "**/*.ts" to include all TS files.
+  - tsconfig "include" set to "\*_/_.ts" to include all TS files.
   - Limited ambient types to ["node"] to avoid implicit inclusion of unrelated
-    @types packages (prevents TS2688 for eslint__js).
-  - Removed unsupported "all" option from Vitest V8 coverage config.
+    @types packages (prevents TS2688 for eslint\_\_js).
+  - Removed unsupported "all" option from Vitest V8 coverage config.
+
 - Fix follow-ups after enabling repo-wide TS checks:
   - Added @types/fs-extra to satisfy TS7016 for rollup.config.ts.
   - Updated src/readme.test.ts to import from './MockDb' directly to avoid
@@ -46,19 +47,20 @@
   - Replaced fs-extra with Node fs/promises (mkdir/access/copyFile) in
     rollup.config.ts copyDocsPlugin.
   - Removed fs-extra and @types/fs-extra from devDependencies.
-  - Resolves TS7016 in typecheck/build/docs while keeping all TS files typed.
+  - Resolves TS7016 in typecheck/build/docs while keeping all TS files typed.
+
 - Rollup config typecheck fix:
   - Imported readFileSync from node:fs and used it to read package.json for
     externals list, resolving TS2304 in typecheck/build/docs.
 
 - Prune unused devDependencies and add test linting:
   - Removed devDeps no longer used: ts-node, source-map-support,
-    @types/eslint__js, @types/eslint-config-prettier.
+    @types/eslint\_\_js, @types/eslint-config-prettier.
   - Added eslint-plugin-vitest and enabled recommended rules/globals for
-    *.test.ts files.
+    \*.test.ts files.
 
 - Vitest ESLint integration:
-  - Disabled vitest/valid-expect for *.test.ts to allow Chai-style chainers
+  - Disabled vitest/valid-expect for \*.test.ts to allow Chai-style chainers
     used by Vitest (e.g., expect(x).to.equal(y)).
 
 - Migrate ESLint config to TypeScript:
@@ -69,6 +71,10 @@
 
 - ESLint TS config hardening:
   - Switched to ESLint's defineConfig API (replaces deprecated tseslint.config).
-  - Expanded ignores to exclude .rollup.cache, docs/**, and all *.js outputs.
+  - Expanded ignores to exclude .rollup.cache, docs/\*_, and all _.js outputs.
   - Removed unnecessary optional chaining/nullish coalescing in Vitest globals.
-  - Lint now targets only TypeScript sources, including tests and configs.
+  - Lint now targets only TypeScript sources, including tests and configs.
+
+- ESLint config cleanup:
+  - Replaced optional chaining/nullish coalescing when spreading Vitest
+    recommended rules with direct access to avoid self-lint errors.

@@ -140,7 +140,4 @@ export const buildTypes = (dest: string): RollupOptions => ({
   plugins: [alias, dtsPlugin()],
 });
 
-export default [
-  buildLibrary(outputPath),
-  buildTypes(outputPath),
-];
+export default [buildLibrary(outputPath), buildTypes(outputPath)];

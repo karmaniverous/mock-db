@@ -8,7 +8,7 @@
     @types packages.
 - Testing
   - Use Vitest for all tests. Mocha/NYC are not used.
-  - Test files use the pattern *.test.ts and run under the Node environment.
+  - Test files use the pattern \*.test.ts and run under the Node environment.
   - The test command runs "vitest run --coverage".
   - Coverage is provided by the V8 provider with reporters: text, text-summary, html, and lcov.
   - Prefer importing Vitest APIs directly:
@@ -33,4 +33,3 @@
     convenience artifact.
 - Notes
   - If additional Vitest-specific lint rules are desired in the future, consider eslint-plugin-vitest.
-

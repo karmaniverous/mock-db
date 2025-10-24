@@ -55,9 +55,9 @@ export default defineConfig([
       globals: vitestPlugin.environments.env.globals,
     },
     rules: {
-      ...(vitestPlugin.configs?.recommended?.rules ?? {}),
+      ...vitestPlugin.configs.recommended.rules,
       // Allow Chai-style chainers provided by Vitest (e.g., .to.equal)
       'vitest/valid-expect': 'off',
     },
   },
-]);
+]);

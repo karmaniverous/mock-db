@@ -11,5 +11,6 @@
   "git.enableSmartCommit": true,
   "javascript.preferences.importModuleSpecifierEnding": "minimal",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "testExplorer.mergeSuites": true
+  "testExplorer.mergeSuites": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
