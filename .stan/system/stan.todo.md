@@ -95,4 +95,9 @@
 - Vitest ESLint plugin typing & dep scope:
   - Cast plugin object to ESLint Plugin type to satisfy TS in eslint.config.ts,
     and removed explicit vitest globals (tests import from 'vitest').
-  - Moved @vitest/eslint-plugin to devDependencies.
+  - Moved @vitest/eslint-plugin to devDependencies.
+
+- ESLint config typing cleanup:
+  - Removed invalid type import from 'eslint' and avoided 'any'/unsafe casts by
+    extracting Vitest recommended rules with a typed helper and casting the
+    plugin at its use site.
