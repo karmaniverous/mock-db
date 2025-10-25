@@ -1,11 +1,17 @@
 stan-core:
-  stanPath: .stan
   excludes:
     - '*.local'
     - assets/**
     - CHANGELOG.md
     - docs/**
     - package-lock.json
+  imports:
+    entity-tools:
+      - ../entity-tools/.stan/system/stan.requirements.md
+      - ../entity-tools/.stan/system/stan.todo.md
+      - ../entity-tools/dist/index.d.ts
+      - ../entity-tools/.stan/interop/mock-db/**
+  stanPath: .stan
 stan-cli:
   cliDefaults:
     run:
@@ -24,3 +30,4 @@ stan-cli:
       script: npm run docs -- --emit none
       warnPattern: \\[warning\\]
     knip: npm run knip
+

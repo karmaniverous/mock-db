@@ -2,12 +2,13 @@
   "entryPoints": ["./src/index.ts"],
   "externalSymbolLinkMappings": {
     "@karmaniverous/entity-tools": {
-      "DefaultTranscodeMap": "https://docs.karmanivero.us/entity-tools/interfaces/entity_tools.DefaultTranscodeMap.html",
-      "defaultTranscodes": "https://docs.karmanivero.us/entity-tools/variables/entity_tools.defaultTranscodes.html",
-      "Entity": "https://docs.karmanivero.us/entity-tools/types/entity_tools.Entity.html",
-      "SortOrder": "https://docs.karmanivero.us/entity-tools/types/entity_tools.SortOrder.html",
-      "TranscodeMap": "https://docs.karmanivero.us/entity-tools/types/entity_tools.TranscodeMap.html",
-      "Transcodes": "https://docs.karmanivero.us/entity-tools/types/entity_tools.Transcodes.html"
+      "DefaultTranscodeMap": "https://docs.karmanivero.us/entity-tools/interfaces/entity-tools.DefaultTranscodeMap.html",
+      "defaultTranscodes": "https://docs.karmanivero.us/entity-tools/variables/entity-tools.defaultTranscodes.html",
+      "Entity": "https://docs.karmanivero.us/entity-tools/types/entity-tools.Entity.html",
+      "MakeOptional": "https://docs.karmanivero.us/entity-tools/types/entity-tools.MakeOptional.html",
+      "SortOrder": "https://docs.karmanivero.us/entity-tools/types/entity-tools.SortOrder.html",
+      "TranscodeMap": "https://docs.karmanivero.us/entity-tools/types/entity-tools.TranscodeMap.html",
+      "Transcodes": "https://docs.karmanivero.us/entity-tools/types/entity-tools.Transcodes.html"
     }
   },
   "highlightLanguages": [
