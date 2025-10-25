@@ -2,50 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/index.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/modules.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/hierarchy.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/documents/CHANGELOG.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/modules/mock-db.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/classes/mock-db.MockDb.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/interfaces/mock-db.DefaultTranscodeMap.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/interfaces/mock-db.QueryOptions.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/interfaces/mock-db.QueryReturn.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/types/mock-db.Entity.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/types/mock-db.SortOrder.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 	<url>
 		<loc>https://docs.karmanivero.us/mock-db/types/mock-db.TranscodeMap.html</loc>
-		<lastmod>2025-10-25T04:14:43.795Z</lastmod>
+		<lastmod>2025-10-25T04:26:45.068Z</lastmod>
 	</url>
 </urlset>
