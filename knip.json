@@ -1,5 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "ignore": ["docs/**"],
-  "ignoreDependencies": ["auto-changelog", "cross-env", "prettier"]
+  "ignoreDependencies": ["cross-env"]
 }

@@ -19,7 +19,7 @@ stan-cli:
     test: npm run test -- --no-color
     build:
       script: cross-env NO_COLOR=1 npm run build
-      warnPattern: loaded [\\w.]+ with warnings(?!.*outputToFilesystem option is defaulting to true)
+      warnPattern: ^(?!.*outputToFilesystem option is defaulting to true)\\(\\!\\) \\[plugin typescript\\].*
     docs:
       script: npm run docs -- --emit none
       warnPattern: \\[warning\\]

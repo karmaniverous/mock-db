@@ -100,4 +100,15 @@
 - ESLint config typing cleanup:
   - Removed invalid type import from 'eslint' and avoided 'any'/unsafe casts by
     extracting Vitest recommended rules with a typed helper and casting the
-    plugin at its use site.
+    plugin at its use site.
+
+- Test fix (Vitest SSR import resolution):
+  - Updated src/readme.test.ts to import MockDb from './MockDb' directly to
+    avoid "is not a constructor" when bundler resolves '.' differently under SSR.
+
+- Knip cleanup:
+  - Removed redundant ignoreDependencies for auto-changelog and prettier.
+
+- Build warnings filter:
+  - Updated stan.config.yml build warnPattern to match only plugin typescript
+    warnings and explicitly ignore the benign “outputToFilesystem” message.
