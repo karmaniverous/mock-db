@@ -1,48 +1,48 @@
-<!-- TYPEDOC_EXCLUDE -->
+# @karmaniverous/mock-db
 
-> [API Documentation](https://docs.karmanivero.us/mock-db) • [CHANGELOG](https://github.com/karmaniverous/mock-db/tree/main/CHANGELOG.md)
+[![npm version](https://img.shields.io/npm/v/@karmaniverous/mock-db.svg)](https://www.npmjs.com/package/@karmaniverous/mock-db) ![Node Current](https://img.shields.io/node/v/@karmaniverous/mock-db) <!-- TYPEDOC_EXCLUDE --> [![docs](https://img.shields.io/badge/docs-website-blue)](https://docs.karmanivero.us/stan) [![changelog](https://img.shields.io/badge/changelog-latest-blue.svg)](https://github.com/karmaniverous/mock-db/tree/main/CHANGELOG.md)<!-- /TYPEDOC_EXCLUDE --> [![license](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://github.com/karmaniverous/mock-db/tree/main/LICENSE.md)
 
-<!-- /TYPEDOC_EXCLUDE -->
+MockDb is a tiny, test‑oriented helper that simulates a small subset of
+Amazon DynamoDB behaviors over an in‑memory array of JSON objects. Its goal is
+to make it easy to unit/integration test code that expects “Dynamo‑like”
+reads without needing to provision a real database.
 
-# MockDb
+What you get:
 
-The [`MockDb`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html) class wires up a local JSON data store to replicate some key behaviors of DynamoDB for testing purposes.
+- querySync and query — scan across all items or query a partition (hash key)
+- Optional sorting, filtering, limits, and pagination (pageKey)
+- Sync and async flavors (async returns with a normally‑distributed delay)
 
-MockDb is not a database in any meaningful sense, nor does it express anything like the full range of DynamoDB's features! It's just a limited test fixture, to which I add features as I need them.
+What you do NOT get:
 
-The current feature set includes:
+- A database. This is a small helper for tests, not a general data store.
+- The full DynamoDB API. Only a small, ergonomic subset of behavior.
 
-- [`query`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#query) & [`querySync`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#querySync) - Depending on the options passed, these methods behave like either a DynamoDB `query` or `scan` operation, including limited return sets with page keys.
+MockDb uses [@karmaniverous/entity-tools](https://github.com/karmaniverous/entity-tools)
+for type modeling and sorting.
 
-- All methods exist in synchronous & asynchronous versions. Async methods run with a normally-distributed delay.
+## Installation
 
-That's it!
-
-MockDB depends on [`entity-tools`](https://github.com/karmaniverous/entity-tools) to define entity properties, indexable properties, and records. This package also provides the [`sort`](https://docs.karmanivero.us/entity-tools/functions/entity_tools.sort.html) function used internally by [`MockDb.query`](https://docs.karmanivero.us/mock-db/classes/mock_db.MockDb.html#query).
-
-## Usage
-
-You'll almost certainly run MockDb as a dev dependency. To install:
+You’ll typically install this as a dev dependency:
 
 ```bash
 npm i -D @karmaniverous/mock-db
 ```
 
-Then you can run:
+Node: >= 18 recommended (ESM module). The package ships both ESM and CJS outputs.
+
+## Quick start
 
 ```ts
-import type { Entity } from '@karmaniverous/entity-tools';
+import type { Entity } from '@karmaniverous/mock-db'; // convenience re-export
+import { MockDb, type QueryOptions } from '@karmaniverous/mock-db';
 
-import { MockDb, type QueryOptions } from '.';
-
-// Specify the data type.
 interface User extends Entity {
-  partition: string;
+  partition: string; // hash key
   id: number;
   name: string;
 }
 
-// Create some data.
 const users: User[] = [
   { partition: 'a', id: 4, name: 'Alice' },
   { partition: 'b', id: 3, name: 'Bob' },
@@ -50,28 +50,17 @@ const users: User[] = [
   { partition: 'a', id: 1, name: 'Dave' },
 ];
 
-// Create a new instance of MockDb.
-const mockDb = new MockDb(users);
+const db = new MockDb(users); // default async mean=100ms, std=20ms
 
-// Perform a "scan" synchronously across partitions with a filter.
-const scanResult = mockDb.querySync({
+// 1) Synchronous “scan” across all items with filter + sort
+const scan = db.querySync({
   filter: ({ id }) => id > 2,
   sortOrder: [{ property: 'id' }],
 });
+// => { count: 2, items: [...], pageKey: undefined }
 
-console.log(scanResult);
-
-// {
-//   count: 2,
-//   items: [
-//     { partition: 'b', id: 2, name: 'Bob' },
-//     { partition: 'a', id: 3, name: 'Alice' }
-//   ],
-//   pageKey: undefined
-// }
-
-// Perform an asynchronous, paged, sorted "query" within a partition.
-const queryOptions: QueryOptions<User> = {
+// 2) Asynchronous, paged, sorted “query” within a partition (hash key)
+const opts: QueryOptions<User> = {
   hashKey: 'partition',
   hashValue: 'a',
   indexComponents: ['partition', 'id'],
@@ -79,41 +68,109 @@ const queryOptions: QueryOptions<User> = {
   sortOrder: [{ property: 'id' }],
 };
 
-let queryResult = await mockDb.query(queryOptions, 100);
+let page = await db.query(opts, 100);
+// => first two items plus pageKey for next page
 
-console.log(queryResult);
-
-// {
-//   count: 2,
-//   items: [
-//     { partition: 'a', id: 1, name: 'Dave' },
-//     { partition: 'a', id: 2, name: 'Charlie' }
-//   ],
-//   pageKey: { partition: 'a', id: 2 }
-// }
-
-// Use the returned pageKey to get the next page.
-queryResult = await mockDb.query(
-  {
-    ...queryOptions,
-    pageKey: queryResult.pageKey,
-  },
-  100,
-);
-
-console.log(queryResult);
-
-// {
-//   count: 1,
-//   items: [ { partition: 'a', id: 4, name: 'Alice' } ],
-//   pageKey: undefined
-// }
+page = await db.query({ ...opts, pageKey: page.pageKey }, 100);
+// => next page (remaining items)
 ```
 
-See the [API Documentation](https://docs.karmanivero.us/mock-db) for more details.
+CommonJS example:
 
-Got questions or suggestions? [Start a discussion!](https://github.com/karmaniverous/mock-db/discussions)
+```js
+const { MockDb } = require('@karmaniverous/mock-db');
+```
+
+## API overview
+
+### class MockDb<E extends Entity, T extends TranscodeMap = DefaultTranscodeMap>
+
+Replicates a limited set of DynamoDB scan/query behaviors over a local array.
+
+Constructor
+
+- new MockDb(data: E[], delayMean = 100, delayStd = 20)
+  - delayMean/delayStd (ms) control async delay for query(...). querySync is always synchronous.
+
+Methods
+
+- querySync(options?: QueryOptions<E, T>): QueryReturn<E, T>
+- query(options?: QueryOptions<E, T>, delayMean?: number, delayStd?: number): Promise<QueryReturn<E, T>>
+
+### type QueryOptions<E, T>
+
+Options for query/querySync:
+
+- hashKey?: TranscodableProperties<E, T>  
+  When provided with hashValue, restricts results to the “partition” (like DynamoDB query).
+- hashValue?: T[keyof T]
+- sortOrder?: SortOrder<E>  
+  Sorting keys and directions; powered by entity‑tools’ sort.
+- filter?: (item: E) => unknown  
+  Predicate to include items.
+- limit?: number  
+  Maximum number of items to return.
+- pageKey?: E | Partial<Pick<E, TranscodableProperties<E, T>>>  
+  If set, results begin after this item (pagination).
+- indexComponents?: TranscodableProperties<E, T>[]  
+  When limit is reached, the returned pageKey contains only these properties; otherwise it will be the entire last item.
+
+### type QueryReturn<E, T>
+
+Result from query/querySync:
+
+- count: number  
+  Count of items returned in this page (not the entire dataset).
+- items: E[]  
+  The data items in this page.
+- pageKey?: E | Pick<E, TranscodableProperties<E, T>>  
+  Present when limit was reached; pass back as options.pageKey to get the next page.
+
+### Behavior notes
+
+- Scan vs Query:
+  - If hashKey + hashValue are omitted, behavior is a “scan” across all items.
+  - If both are present, behavior is a “query” restricted to that partition.
+- Sorting: Applied before pagination/filtering (like Dynamo’s sorted result sets).
+- Filtering: A plain predicate function; no Dynamo expression syntax.
+- Pagination: Provide limit; when the page is full, the last item’s indexComponents (or the entire item) is returned as pageKey. Pass it back to get the next page.
+- Async timing: query(...) simulates network latency with a normal distribution around delayMean (std delayStd). querySync(...) performs the same logic without delay.
+
+## Re‑exported convenience types
+
+To avoid a direct dependency on @karmaniverous/entity‑tools in your imports, the following types are re‑exported:
+
+```ts
+import type {
+  Entity,
+  SortOrder,
+  TranscodeMap,
+  DefaultTranscodeMap,
+} from '@karmaniverous/mock-db';
+```
+
+You can still import them from @karmaniverous/entity‑tools if you prefer.
+
+## Project scripts (local)
+
+- Test: `npm test` (Vitest; coverage via V8)
+- Lint/format: `npm run lint` (ESLint) • `npm run lint:fix` (ESLint + Prettier)
+- Typecheck: `npm run typecheck` (tsc, no emit)
+- Build: `npm run build` (Rollup – ESM/CJS + dts)
+- Docs: `npm run docs` (TypeDoc)
+
+## Typedocs
+
+See the online [API Documentation](https://docs.karmanivero.us/mock-db) for the complete, generated API reference.
+
+## Why not a real database?
+
+This library is meant for fast, deterministic test runs where mocking a small
+subset of Dynamo behaviors is sufficient (hash key filtering, sorting,
+pagination). If you need to exercise full DynamoDB semantics, consider running
+a local emulator or integration tests against a real service.
 
 ---
 
-Built for you with ❤️ on Bali! Find more great tools & templates on [my GitHub Profile](https://github.com/karmaniverous).
+Built for you with ❤️ on Bali! Find more tools & templates on
+[my GitHub Profile](https://github.com/karmaniverous).

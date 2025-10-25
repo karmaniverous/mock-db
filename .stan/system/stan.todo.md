@@ -111,4 +111,11 @@
 
 - Build warnings filter:
   - Updated stan.config.yml build warnPattern to match only plugin typescript
-    warnings and explicitly ignore the benign “outputToFilesystem” message.
+    warnings and explicitly ignore the benign “outputToFilesystem” message.
+
+- Documentation & exports:
+  - README: expanded with installation, ESM/CJS usage, complete API overview
+    (QueryOptions, QueryReturn, behaviors), examples, and project scripts.
+  - Exports: re-exported convenient types (Entity, SortOrder, TranscodeMap,
+    DefaultTranscodeMap) so consumers can import all needed types from this
+    package without depending on entity-tools directly.
