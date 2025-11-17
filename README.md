@@ -83,7 +83,7 @@ const { MockDb } = require('@karmaniverous/mock-db');
 
 ## API overview
 
-### class MockDb<E extends Entity, T extends TranscodeMap = DefaultTranscodeMap>
+### class MockDb<E extends Entity, T extends TranscodeRegistry = DefaultTranscodeRegistry>
 
 Replicates a limited set of DynamoDB scan/query behaviors over a local array.
 
@@ -99,7 +99,7 @@ Methods
 
 ### type QueryOptions<E, T>
 
-Options for query/querySync:
+Options for query/querySync (T is a TranscodeRegistry):
 
 - hashKey?: TranscodableProperties<E, T>  
   When provided with hashValue, restricts results to the “partition” (like DynamoDB query).
@@ -144,8 +144,8 @@ To avoid a direct dependency on @karmaniverous/entity‑tools in your imports, t
 import type {
   Entity,
   SortOrder,
-  TranscodeMap,
-  DefaultTranscodeMap,
+  TranscodeRegistry,
+  DefaultTranscodeRegistry,
 } from '@karmaniverous/mock-db';
 ```
 

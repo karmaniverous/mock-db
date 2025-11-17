@@ -118,4 +118,11 @@
     (QueryOptions, QueryReturn, behaviors), examples, and project scripts.
   - Exports: re-exported convenient types (Entity, SortOrder, TranscodeMap,
     DefaultTranscodeMap) so consumers can import all needed types from this
-    package without depending on entity-tools directly.
+    package without depending on entity-tools directly.
+
+- Entity-tools rename alignment:
+  - Replaced TranscodeMap -> TranscodeRegistry and DefaultTranscodeMap ->
+    DefaultTranscodeRegistry across code (imports/generics) and docs.
+  - Updated src/index.ts type re-exports to new names for consumer convenience.
+  - Adjusted typedoc externalSymbolLinkMappings to target the new symbols.
+  - Resolved TS2724 errors in build/docs/typecheck caused by upstream rename.
