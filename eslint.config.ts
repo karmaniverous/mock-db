@@ -19,6 +19,7 @@ export default defineConfig([
   // Global ignores (keep ESLint away from build/cache JS)
   {
     ignores: [
+      '.stan/**/*',
       'coverage/**/*',
       'dist/**/*',
       'docs/**/*',
@@ -46,10 +47,7 @@ export default defineConfig([
       prettier: prettierEslintPlugin,
     },
     rules: {
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
-      'no-unused-vars': 'off',
       'prettier/prettier': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
