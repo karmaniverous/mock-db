@@ -1,6 +1,6 @@
 stan-core:
   excludes:
-    - "*.local"
+    - '*.local'
     - assets/**
     - CHANGELOG.md
     - docs/**
@@ -22,13 +22,17 @@ stan-cli:
   patchOpenCommand: code -g {file}
   scripts:
     typecheck: npm run typecheck
-    lint: npm run lint:fix
+    lint:
+      script: npm run lint:fix
+      warnPattern: \\d+:\\d+\\s+warning
     test: npm run test -- --no-color
     build:
       script: cross-env NO_COLOR=1 npm run build
-      warnPattern: ^(?!.*outputToFilesystem option is defaulting to true)\\(\\!\\)
+      warnPattern:
+        ^(?!.*outputToFilesystem option is defaulting to true)\\(\\!\\)
         \\[plugin typescript\\].*
     docs:
       script: npm run docs -- --emit none
       warnPattern: \\[warning\\]
     knip: npm run knip
+
