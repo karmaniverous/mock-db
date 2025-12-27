@@ -27,7 +27,7 @@
   "hostedBaseUrl": "https://docs.karmanivero.us/mock-db",
   "out": "./docs",
   "plugin": ["typedoc-plugin-mdn-links", "typedoc-plugin-replace-text"],
-  "projectDocuments": ["./CHANGELOG.md"],
+  "projectDocuments": ["./guides/stan-assistant-guide.md", "./CHANGELOG.md"],
   "replaceText": {
     "replacements": [
       {
@@ -40,6 +40,9 @@
   "searchInComments": true,
   "searchInDocuments": true,
   "titleLink": "https://github.com/karmaniverous/mock-db",
+  "validation": {
+    "notDocumented": true
+  },
   "visibilityFilters": {}
 }
 

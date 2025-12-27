@@ -126,3 +126,5 @@
   - Updated src/index.ts type re-exports to new names for consumer convenience.
   - Adjusted typedoc externalSymbolLinkMappings to target the new symbols.
   - Resolved TS2724 errors in build/docs/typecheck caused by upstream rename.
+
+- Add STAN assistant guide to TypeDoc project documents (before CHANGELOG.md).

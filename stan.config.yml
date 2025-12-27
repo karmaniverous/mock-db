@@ -6,11 +6,9 @@ stan-core:
     - docs/**
     - package-lock.json
   imports:
-    entity-tools:
-      - ../entity-tools/.stan/system/stan.requirements.md
-      - ../entity-tools/.stan/system/stan.todo.md
-      - ../entity-tools/dist/index.d.ts
+    '@karmaniverous/entity-tools':
       - ../entity-tools/.stan/interop/mock-db/**
+      - ../entity-tools/guides/stan-assistant-guide.md
   stanPath: .stan
   includes: []
 stan-cli:
