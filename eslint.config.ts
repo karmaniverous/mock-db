@@ -19,7 +19,6 @@ export default defineConfig([
   // Global ignores (keep ESLint away from build/cache JS)
   {
     ignores: [
-      '.stan/**/*',
       'coverage/**/*',
       'dist/**/*',
       'docs/**/*',
