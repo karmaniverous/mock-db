@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [Unreleased](https://github.com/karmaniverous/mock-db/compare/0.4.0...HEAD)
+#### [0.4.1](https://github.com/karmaniverous/mock-db/compare/0.4.0...0.4.1)
+
+- chore: update deps, remove STAN, fix rollup/TS6 compat [`#2`](https://github.com/karmaniverous/mock-db/pull/2)
+- cleanup [`e6e9b2d`](https://github.com/karmaniverous/mock-db/commit/e6e9b2d68cb75f0478d966ecac9e11155070de35)
+- docs: add STAN guide to TypeDoc docs [`e18b158`](https://github.com/karmaniverous/mock-db/commit/e18b15814e00d0b913323b4b7efa070050f282d9)
+- updated docs [`f525df9`](https://github.com/karmaniverous/mock-db/commit/f525df9da872f5f1e798d19e2bf67955f1decea4)
+- ni [`a643d72`](https://github.com/karmaniverous/mock-db/commit/a643d72a0014594baa3418d04e881d7812faed1d)
+- chore: add copilot review instructions [`9385a55`](https://github.com/karmaniverous/mock-db/commit/9385a555a237f8d39471e31dd010c23ecbd9edb2)
 
 #### [0.4.0](https://github.com/karmaniverous/mock-db/compare/0.3.5...0.4.0)
 
