@@ -57,7 +57,7 @@ export default defineConfig([
   {
     files: ['**/*.test.ts'],
     plugins: {
-      vitest: vitest as never,
+      vitest: vitest,
     },
     rules: {
       ...vitestRecommendedRules,

@@ -1,5 +1,6 @@
 .nyc_output/
 .rollup.cache/
+.tsbuild/
 .tsbuildinfo
 *.local
 local/
