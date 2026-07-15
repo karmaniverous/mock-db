@@ -2,7 +2,7 @@ import type { Entity } from '@karmaniverous/entity-tools';
 import { describe, expect, it } from 'vitest';
 
 import { MockDb, type QueryOptions } from '.';
-import users from './users.json' assert { type: 'json' };
+import users from './users.json' with { type: 'json' };
 
 interface User extends Entity {
   created?: number;
@@ -18,7 +18,7 @@ interface User extends Entity {
   lastNameSK?: string;
 }
 
-const mockDb = new MockDb(users as User[]);
+const mockDb = new MockDb(users);
 
 describe('MockDb', () => {
   describe('query', () => {
